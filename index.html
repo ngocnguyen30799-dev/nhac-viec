@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Nhắc việc hằng ngày</title>
+<title>Dalat Hasfarm – Nhắc việc</title>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#eef2f6;--card:#fff;--ink:#14213d;--mute:#64708a;--line:#d9e0ea;--acc:#2b59ff;--late:#e5383b;--soon:#f59e0b;--ok:#1f9d6b;
+:root{--bg:#f1f6ef;--card:#fff;--ink:#16301f;--mute:#5d7565;--line:#d5e2d6;--acc:#1f7a4d;--onacc:#fff;--orange:#f28c1a;--late:#e5383b;--soon:#e59a00;--ok:#2e9e5b;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--card:#17203a;--ink:#e8edf8;--mute:#93a0bd;--line:#26314f;--acc:#6f8cff;--late:#ff6b6e;--soon:#fbbf24;--ok:#3ccf91}}
-:root[data-theme="dark"]{--bg:#0e1524;--card:#17203a;--ink:#e8edf8;--mute:#93a0bd;--line:#26314f;--acc:#6f8cff;--late:#ff6b6e;--soon:#fbbf24;--ok:#3ccf91}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1a11;--card:#152a1d;--ink:#e6f2e8;--mute:#93ad9a;--line:#26412f;--acc:#4ed08a;--onacc:#07220f;--orange:#ffa53d;--late:#ff6b6e;--soon:#fbbf24;--ok:#4ed08a}}
+:root[data-theme="dark"]{--bg:#0c1a11;--card:#152a1d;--ink:#e6f2e8;--mute:#93ad9a;--line:#26412f;--acc:#4ed08a;--onacc:#07220f;--orange:#ffa53d;--late:#ff6b6e;--soon:#fbbf24;--ok:#4ed08a}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.5}
@@ -28,7 +28,7 @@ form{background:var(--card);border:1px solid var(--line);border-radius:14px;padd
 form input,form textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px}
 .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
 label{font-size:.8rem;color:var(--mute);display:block;margin-bottom:2px}
-.add{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:11px 18px;font-weight:700}
+.add{background:var(--orange);color:#2a1600;border:0;border-radius:8px;padding:11px 18px;font-weight:700}
 .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px}
 .tab{background:none;border:1px solid var(--line);border-radius:99px;padding:6px 14px;color:var(--mute);white-space:nowrap}
 .tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -43,22 +43,60 @@ li input[type=checkbox]{width:22px;height:22px;margin-top:3px;accent-color:var(-
 li.late .due{color:var(--late);font-weight:700}li.soon .due{color:var(--soon);font-weight:700}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .btn{border:1px solid var(--line);background:none;border-radius:8px;padding:6px 12px;font-size:.85rem;font-weight:500}
-.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff;font-weight:700}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:var(--onacc);font-weight:700}
 .mvp{margin-top:10px;padding:10px;border:1px dashed var(--line);border-radius:10px;display:grid;gap:8px}
 .mvp input{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px}
 .del{background:none;border:0;color:var(--mute);font-size:1.2rem;padding:0 4px}
 .empty{text-align:center;color:var(--mute);padding:30px 10px;border:1px dashed var(--line);border-radius:12px}
+[hidden]{display:none!important}
+.nav{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.seg{background:none;border:0;border-bottom:3px solid transparent;padding:8px 14px;font-weight:700;color:var(--mute)}
+.seg[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--orange)}
+.otab{background:none;border:1px solid var(--line);border-radius:99px;padding:6px 14px;color:var(--mute);white-space:nowrap}
+.otab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.g2{grid-template-columns:1fr}}
+.line{display:grid;grid-template-columns:1fr 76px 92px auto;gap:6px;align-items:center;margin-bottom:6px}
+#osearch{width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px;margin-bottom:12px}
+.code{font-weight:500;color:var(--mute);font-size:.85rem;margin-left:6px}
+.ol{margin-top:6px;display:grid;gap:2px}
+select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 10px;font:inherit;color:inherit}
+.orow{display:flex;gap:8px;margin-bottom:12px}
+.orow #osearch{margin-bottom:0;flex:1;width:auto;min-width:0}
+.orow .btn{white-space:nowrap;padding:8px 14px}
+#csearch{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px;flex:1;min-width:0}
+#clist{display:grid;gap:6px}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+li.odone{border-left-color:var(--ok);opacity:.7}li.ocancel{border-left-color:var(--mute);opacity:.5}
+.brand{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#0f4a2f,#1f7a4d);color:#fff;border-radius:16px;padding:16px 18px 13px;border-bottom:5px solid #f28c1a;margin-bottom:18px}
+.brand>div{position:relative}
+.logo{width:52px;height:52px;flex:none;background:#fff;border-radius:50%;padding:4px}
+.bn{font-weight:800;font-size:1.25rem;letter-spacing:-.01em;line-height:1.2}
+.bs{font-size:.8rem;opacity:.85}
+.deco{position:absolute;pointer-events:none;--p:#fff;opacity:.13}
+.d1{right:-24px;top:-34px;width:140px;height:140px}
+.d2{right:96px;bottom:-22px;width:64px;height:64px;opacity:.09}
+footer{display:flex;justify-content:center;align-items:center;gap:6px;color:var(--mute);font-size:.8rem;margin-top:28px}
+footer svg{width:16px;height:16px}
 #toasts{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;max-width:calc(100% - 24px);z-index:9}
 .toast{background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
 <main>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="fl" viewBox="0 0 64 64"><g style="fill:var(--p,#f28c1a)"><ellipse cx="32" cy="16" rx="7" ry="11"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="6" fill="#f5b700"/></symbol></svg>
+<div class="brand">
+  <svg class="logo" role="img" aria-label="Logo Dalat Hasfarm"><use href="#fl"/></svg>
+  <div><div class="bn">Dalat Hasfarm</div><div class="bs">Công ty TNHH Dalat Hasfarm</div></div>
+  <svg class="deco d1" aria-hidden="true"><use href="#fl"/></svg><svg class="deco d2" aria-hidden="true"><use href="#fl"/></svg>
+</div>
 <header>
-  <div><h1>Việc hôm nay</h1><div class="date" id="date"></div></div>
+  <div><h1 id="h1">Việc hôm nay</h1><div class="date" id="date"></div></div>
   <button class="ghost" id="notif" type="button">Bật thông báo</button>
 </header>
 
+<nav class="nav"><button class="seg" data-v="task" aria-pressed="true">Công việc</button><button class="seg" data-v="order" aria-pressed="false">Đơn hàng</button><button class="seg" data-v="settings" aria-pressed="false">Cài đặt</button></nav>
+<section id="v-task">
 <div id="alert" role="alert"></div>
 
 <form id="f">
@@ -77,10 +115,61 @@ li.late .due{color:var(--late);font-weight:700}li.soon .due{color:var(--soon);fo
   <button class="tab" data-f="done" aria-pressed="false">Đã xong</button>
 </div>
 <ul id="list"></ul>
+</section>
+
+<section id="v-order" hidden>
+<form id="of">
+  <div class="g2">
+    <div><label for="ocn">Tên khách hàng</label><input id="ocn" list="dl-name" required autocomplete="off"></div>
+    <div><label for="occ">Mã khách hàng</label><input id="occ" list="dl-code" autocomplete="off"></div>
+  </div>
+  <div class="g2">
+    <div><label for="od">Ngày giao hàng</label><input id="od" type="date" required></div>
+    <div><label for="ot">Thời gian nhận hàng</label><input id="ot" type="time" required></div>
+  </div>
+  <div><label for="oaddr">Địa chỉ giao hàng</label><input id="oaddr" autocomplete="off" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"></div>
+  <div><label>Sản phẩm (mã hoặc tên, số lượng, đơn vị)</label><div id="lines"></div>
+  <button type="button" class="btn" id="addline">+ Thêm dòng sản phẩm</button></div>
+  <div><label for="onote">Ghi chú</label><textarea id="onote" rows="2"></textarea></div>
+  <button class="add" type="submit">Tạo đơn hàng</button>
+</form>
+<div class="orow"><input id="osearch" type="search" placeholder="Tìm theo khách, mã, sản phẩm…" aria-label="Tìm đơn hàng"><button class="btn ok" id="oxl" type="button">Xuất Excel</button></div>
+<div class="tabs" id="otabs">
+  <button class="otab" data-o="open" aria-pressed="true">Đang xử lý</button>
+  <button class="otab" data-o="today" aria-pressed="false">Giao hôm nay</button>
+  <button class="otab" data-o="done" aria-pressed="false">Đã xong</button>
+  <button class="otab" data-o="all" aria-pressed="false">Tất cả</button>
+</div>
+<ul id="olist"></ul>
+<datalist id="dl-name"></datalist><datalist id="dl-code"></datalist>
+<datalist id="dl-unit"><option value="Cành"><option value="Bó"><option value="Cái"></datalist>
+</section>
+<section id="v-set" hidden>
+<form id="cf">
+  <div class="g2">
+    <div><label for="cn">Tên khách hàng</label><input id="cn" required autocomplete="off"></div>
+    <div><label for="cc">Mã khách hàng</label><input id="cc" required autocomplete="off"></div>
+  </div>
+  <button class="add" type="submit">Thêm khách hàng</button>
+</form>
+<form id="imp">
+  <b>Nhập nhiều khách hàng cùng lúc</b>
+  <div><label for="cfile">Chọn file Excel hoặc CSV (cột 1 là Tên KH, cột 2 là Mã KH)</label><input id="cfile" type="file" accept=".xlsx,.xls,.csv"></div>
+  <div><label for="cpaste">Hoặc dán từ Excel (mỗi dòng một khách: Tên KH rồi Mã KH)</label><textarea id="cpaste" rows="4"></textarea></div>
+  <button class="btn ok" type="submit">Nhập danh sách dán</button>
+</form>
+<div class="orow"><input id="csearch" type="search" placeholder="Tìm khách hàng đã lưu…" aria-label="Tìm khách hàng"><button class="btn" id="cclear" type="button">Xóa tất cả</button></div>
+<div class="due" id="ccount" style="margin-bottom:8px"></div>
+<div id="clist"></div>
+</section>
+<footer><svg aria-hidden="true"><use href="#fl"/></svg>Công ty TNHH Dalat Hasfarm</footer>
 </main>
 <div id="toasts" aria-live="polite"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+/* Danh sách khách hàng để import: {code:'KH001',name:'Tên khách'} */
+var CUSTOMERS=[];
 var KEY='nhacviec.tasks.v1',tasks=[],filter='today';
 function load(){try{tasks=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){tasks=[]}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){}}
@@ -109,7 +198,7 @@ function render(){
   var late=tasks.filter(function(t){return status(t)==='late'});
   var a=$('alert');
   if(late.length){a.className='on';a.innerHTML='Bạn có '+late.length+' việc trễ hạn<small>'+esc(late.map(function(t){return t.title}).slice(0,3).join(', '))+(late.length>3?'…':'')+'</small>';document.title='('+late.length+') Trễ hạn – Nhắc việc'}
-  else{a.className='';document.title='Nhắc việc hằng ngày'}
+  else{a.className='';document.title='Dalat Hasfarm – Nhắc việc'}
   var list=tasks.filter(function(t){
     if(filter==='today')return !t.done&&(isToday(t.due)||status(t)==='late');
     if(filter==='late')return status(t)==='late';
@@ -131,7 +220,7 @@ function check(){
     if(left<=0&&!t.lateNotified){t.lateNotified=1;changed=true;notify('Trễ hạn','"'+t.title+'" đã quá hạn')}
   });
   if(changed)save();
-  if(moving===null)render();else{var x=tasks.filter(function(t){return status(t)==='late'}).length;document.title=x?'('+x+') Trễ hạn – Nhắc việc':'Nhắc việc hằng ngày'}
+  if(moving===null)render();else{var x=tasks.filter(function(t){return status(t)==='late'}).length;document.title=x?'('+x+') Trễ hạn – Nhắc việc':'Dalat Hasfarm – Nhắc việc'}
 }
 
 $('f').addEventListener('submit',function(e){
@@ -163,9 +252,110 @@ function updNotif(){var b=$('notif');if(!('Notification' in window))return;
 function setDefaultDue(){var d=new Date(Date.now()+3600000);d.setMinutes(0,0,0);
   $('due').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}
 
+var OKEY='nhacviec.orders.v1',orders=[],ofilter='open',ST=['Mới','Đang chuẩn bị','Đã giao','Đã hủy'];
+function oload(){try{orders=JSON.parse(localStorage.getItem(OKEY))||[]}catch(e){orders=[]}}
+function osave(){try{localStorage.setItem(OKEY,JSON.stringify(orders))}catch(e){}}
+function custs(){var m={};orders.forEach(function(o){if(o.cc)m[o.cc]=o.cn});CUSTOMERS.forEach(function(c){m[c.code]=c.name});customers.forEach(function(c){m[c.code]=c.name});return Object.keys(m).map(function(k){return{code:k,name:m[k]}})}
+function fillDL(){var c=custs();$('dl-name').innerHTML=c.map(function(x){return'<option value="'+esc(x.name)+'">'+esc(x.code)+'</option>'}).join('');$('dl-code').innerHTML=c.map(function(x){return'<option value="'+esc(x.code)+'">'+esc(x.name)+'</option>'}).join('')}
+$('ocn').addEventListener('input',function(){var v=this.value.trim().toLowerCase(),c=custs().find(function(x){return x.name.toLowerCase()===v});if(c){$('occ').value=c.code;useAddr(c.code)}});
+$('occ').addEventListener('input',function(){var v=this.value.trim().toLowerCase(),c=custs().find(function(x){return x.code.toLowerCase()===v});if(c){$('ocn').value=c.name;useAddr(c.code)}});
+function addLine(){var d=document.createElement('div');d.className='line';d.innerHTML='<input class="lp" placeholder="Mã hoặc tên sản phẩm" required aria-label="Sản phẩm"><input class="lq" type="number" min="0" step="any" placeholder="SL" required aria-label="Số lượng"><input class="lu" list="dl-unit" placeholder="Đơn vị" required aria-label="Đơn vị"><button type="button" class="del" aria-label="Xóa dòng">×</button>';$('lines').appendChild(d)}
+$('addline').addEventListener('click',addLine);
+$('lines').addEventListener('click',function(e){var b=e.target.closest('.del');if(b&&$('lines').children.length>1)b.parentNode.remove()});
+function oDefaults(){$('od').value=toInput(Date.now()).slice(0,10);$('ot').value='08:00'}
+$('of').addEventListener('submit',function(e){e.preventDefault();
+  var ls=[].map.call(document.querySelectorAll('#lines .line'),function(r){return{p:r.querySelector('.lp').value.trim(),q:r.querySelector('.lq').value,u:r.querySelector('.lu').value.trim()}}).filter(function(l){return l.p});
+  if(!ls.length){toast('Hãy nhập ít nhất một sản phẩm');return}
+  orders.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),cn:$('ocn').value.trim(),cc:$('occ').value.trim(),addr:$('oaddr').value.trim(),date:$('od').value,time:$('ot').value,lines:ls,note:$('onote').value.trim(),st:'Mới'});
+  osave();$('ocn').value='';$('occ').value='';$('oaddr').value='';$('onote').value='';$('lines').innerHTML='';addLine();fillDL();
+  if(ofilter==='done')setOF('open');else orender();toast('Đã tạo đơn hàng')});
+function odt(o){return new Date(o.date+'T'+(o.time||'00:00')).getTime()}
+function orender(){
+  var q=$('osearch').value.trim().toLowerCase(),now=Date.now(),td=toInput(now).slice(0,10);
+  var list=orders.filter(function(o){
+    var open=o.st==='Mới'||o.st==='Đang chuẩn bị';
+    if(ofilter==='open'&&!open)return false;
+    if(ofilter==='today'&&(o.date!==td||o.st==='Đã hủy'))return false;
+    if(ofilter==='done'&&open)return false;
+    if(!q)return true;
+    return (o.cn+' '+o.cc+' '+(o.addr||'')+' '+o.note+' '+o.lines.map(function(l){return l.p}).join(' ')).toLowerCase().indexOf(q)>-1
+  }).sort(function(a,b){return odt(a)-odt(b)});
+  lastList=list;
+  $('olist').innerHTML=list.length?list.map(function(o){
+    var open=o.st==='Mới'||o.st==='Đang chuẩn bị',d=odt(o)-now,cls=o.st==='Đã giao'?'odone':o.st==='Đã hủy'?'ocancel':d<0?'late':d<10800000?'soon':'';
+    var dp=o.date.split('-'),info=(open&&d<0?'Trễ giao · ':'')+'Giao lúc '+o.time+' ngày '+dp[2]+'/'+dp[1]+'/'+dp[0];
+    return '<li class="'+cls+'"><div><div class="t">'+esc(o.cn)+(o.cc?'<span class="code">'+esc(o.cc)+'</span>':'')+'</div><div class="due">'+info+'</div>'+(o.addr?'<div class="n">Địa chỉ: '+esc(o.addr)+'</div>':'')+'<div class="ol">'+o.lines.map(function(l){return'<div>• '+esc(l.p)+' — <b>'+esc(String(l.q))+' '+esc(l.u)+'</b></div>'}).join('')+'</div>'+(o.note?'<div class="n">'+esc(o.note)+'</div>':'')+'<div class="acts"><select data-st="'+o.id+'" aria-label="Trạng thái">'+ST.map(function(x){return'<option'+(x===o.st?' selected':'')+'>'+x+'</option>'}).join('')+'</select></div></div><button class="del" data-odel="'+o.id+'" aria-label="Xóa đơn">×</button></li>'}).join('')
+    :'<li class="empty" style="display:block;border-left:1px dashed var(--line)">Chưa có đơn hàng nào ở mục này.</li>'}
+function setOF(f){ofilter=f;document.querySelectorAll('.otab').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.o===f)});orender()}
+$('otabs').addEventListener('click',function(e){if(e.target.dataset.o)setOF(e.target.dataset.o)});
+$('osearch').addEventListener('input',orender);
+$('olist').addEventListener('change',function(e){var id=e.target.dataset.st;if(!id)return;var o=orders.find(function(x){return x.id===id});o.st=e.target.value;osave();toast('Đã chuyển sang: '+o.st);orender()});
+$('olist').addEventListener('click',function(e){var id=e.target.dataset.odel;if(id){orders=orders.filter(function(x){return x.id!==id});osave();orender()}});
+var CKEY='nhacviec.customers.v1',customers=[];
+function cload(){try{customers=JSON.parse(localStorage.getItem(CKEY))||[]}catch(e){customers=[]}}
+function csave(){try{localStorage.setItem(CKEY,JSON.stringify(customers))}catch(e){}}
+function useAddr(code){if($('oaddr').value)return;for(var i=orders.length-1;i>=0;i--){if(orders[i].cc===code&&orders[i].addr){$('oaddr').value=orders[i].addr;return}}}
+function upsert(code,name){var i=customers.findIndex(function(c){return c.code.toLowerCase()===code.toLowerCase()});if(i>-1){customers[i].name=name;return 0}customers.push({code:code,name:name});return 1}
+function importRows(rows){var add=0,upd=0,skip=0;
+  rows.forEach(function(r,i){var n=String(r[0]==null?'':r[0]).trim(),c=String(r[1]==null?'':r[1]).trim();
+    if(i===0&&/^(tên|ten|name)/i.test(n))return;
+    if(!n||!c){skip++;return}
+    if(upsert(c,n))add++;else upd++});
+  csave();fillDL();crender();
+  toast('Đã nhập '+add+' khách mới'+(upd?', cập nhật '+upd:'')+(skip?', bỏ qua '+skip+' dòng thiếu tên hoặc mã':''))}
+function parseText(t){return t.split(/\r?\n/).filter(function(l){return l.trim()}).map(function(l){return l.indexOf('\t')>-1?l.split('\t'):l.indexOf(';')>-1?l.split(';'):l.split(',')})}
+function crender(){
+  var q=$('csearch').value.trim().toLowerCase(),l=customers.filter(function(c){return !q||(c.name+' '+c.code).toLowerCase().indexOf(q)>-1});
+  $('ccount').textContent='Đã lưu '+customers.length+' khách hàng'+(q?', tìm thấy '+l.length:'');
+  $('clist').innerHTML=l.slice(0,100).map(function(c){return'<div class="crow"><div><b>'+esc(c.name)+'</b><span class="code">'+esc(c.code)+'</span></div><button class="del" data-cdel="'+esc(c.code)+'" aria-label="Xóa khách hàng">×</button></div>'}).join('')
+    +(l.length>100?'<div class="due">Đang hiện 100 khách đầu tiên, hãy dùng ô tìm kiếm để lọc.</div>':'')
+    +(!l.length?'<div class="empty">'+(customers.length?'Không tìm thấy khách hàng nào.':'Chưa có khách hàng nào. Thêm từng khách hoặc nhập từ file ở phía trên.')+'</div>':'')}
+$('cf').addEventListener('submit',function(e){e.preventDefault();
+  var n=$('cn').value.trim(),c=$('cc').value.trim();if(!n||!c)return;
+  var isNew=upsert(c,n);csave();fillDL();crender();$('cn').value='';$('cc').value='';$('cn').focus();
+  toast(isNew?'Đã thêm khách hàng: '+n:'Đã cập nhật tên cho mã '+c)});
+$('imp').addEventListener('submit',function(e){e.preventDefault();var rows=parseText($('cpaste').value);
+  if(!rows.length){toast('Hãy dán danh sách khách hàng vào ô trên');return}
+  importRows(rows);$('cpaste').value=''});
+$('cfile').addEventListener('change',function(){
+  var f=this.files[0],inp=this;if(!f)return;var r=new FileReader();
+  if(/\.csv$/i.test(f.name)){r.onload=function(){importRows(parseText(String(r.result).replace(/^\uFEFF/,'')));inp.value=''};r.readAsText(f)}
+  else{
+    if(!window.XLSX){toast('Chưa tải được thư viện Excel, hãy kiểm tra mạng rồi thử lại');return}
+    r.onload=function(){try{var wb=XLSX.read(r.result,{type:'array'});importRows(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:false}))}catch(x){toast('Không đọc được file, hãy kiểm tra định dạng')}inp.value=''};
+    r.readAsArrayBuffer(f)}});
+$('csearch').addEventListener('input',crender);
+$('clist').addEventListener('click',function(e){var code=e.target.dataset.cdel;if(!code)return;customers=customers.filter(function(x){return x.code!==code});csave();fillDL();crender()});
+var armed=false;
+$('cclear').addEventListener('click',function(){var b=this;
+  if(!customers.length){toast('Danh sách khách hàng đang trống');return}
+  if(!armed){armed=true;b.textContent='Bấm lần nữa để xóa hết';setTimeout(function(){armed=false;b.textContent='Xóa tất cả'},4000);return}
+  armed=false;b.textContent='Xóa tất cả';customers=[];csave();fillDL();crender();toast('Đã xóa danh sách khách hàng')});
+var lastList=[];
+async function exportXlsx(){
+  if(!lastList.length){toast('Không có đơn hàng nào để xuất');return}
+  if(!window.XLSX){toast('Chưa tải được thư viện Excel, hãy kiểm tra mạng rồi thử lại');return}
+  var rows=[['STT','Tên khách hàng','Mã khách hàng','Ngày giao hàng','Thời gian nhận hàng','Địa chỉ giao hàng','Mã / tên sản phẩm','Số lượng','Đơn vị tính','Ghi chú','Trạng thái']],n=0;
+  lastList.forEach(function(o){var p=o.date.split('-'),dd=p[2]+'/'+p[1]+'/'+p[0];
+    o.lines.forEach(function(l){n++;var q=parseFloat(l.q);rows.push([n,o.cn,o.cc,dd,o.time,o.addr||'',l.p,isNaN(q)?l.q:q,l.u,o.note,o.st])})});
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:5},{wch:24},{wch:14},{wch:14},{wch:12},{wch:34},{wch:28},{wch:10},{wch:10},{wch:30},{wch:14}];
+  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Đơn hàng');
+  var buf=XLSX.write(wb,{bookType:'xlsx',type:'array'}),d=new Date();
+  var name='DonHang_Hasfarm_'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'.xlsx';
+  var dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+  try{
+    if(dl){await dl.save({filename:name,data:buf})}
+    else{var a=document.createElement('a'),u=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)}
+    toast('Đã xuất '+lastList.length+' đơn ('+n+' dòng sản phẩm) ra Excel')
+  }catch(e){if(!e||e.code!=='declined')toast('Không xuất được file Excel')}
+}
+$('oxl').addEventListener('click',exportXlsx);
+function setView(v){$('v-task').hidden=v!=='task';$('v-order').hidden=v!=='order';$('v-set').hidden=v!=='settings';document.querySelectorAll('.seg').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===v)});$('h1').textContent=v==='task'?'Việc hôm nay':v==='order'?'Đơn hàng':'Cài đặt khách hàng';if(v==='order')orender();if(v==='settings')crender()}
+document.querySelector('.nav').addEventListener('click',function(e){if(e.target.dataset.v)setView(e.target.dataset.v)});
 $('date').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-load();setDefaultDue();updNotif();check();
-setInterval(check,20000);
+load();setDefaultDue();updNotif();check();cload();oload();fillDL();addLine();oDefaults();orender();crender();
+setInterval(function(){check();if(!$('v-order').hidden)orender()},20000);
 </script>
 </body>
 </html>
