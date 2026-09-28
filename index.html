@@ -67,6 +67,17 @@ select{border:1px solid var(--line);background:var(--bg);border-radius:8px;paddi
 #csearch{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px;flex:1;min-width:0}
 #clist{display:grid;gap:6px}
 .crow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+#welcome{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));background:linear-gradient(160deg,#0b3b25,#1f7a4d);color:#fff;overflow:hidden;transition:opacity .4s,transform .4s}
+#welcome.out{opacity:0;transform:scale(1.03);pointer-events:none}
+#welcome>:not(.deco){position:relative}
+#welcome :focus-visible{outline-color:#fff}
+.wlogo{width:76px;height:76px;flex:none;background:#fff;border-radius:50%;padding:6px}
+.wg{font-size:1rem;opacity:.9}
+.wq{margin:0;max-width:640px;font-size:clamp(1.3rem,4.6vw,2rem);font-weight:700;line-height:1.4;letter-spacing:-.01em;padding:0 8px}
+.wq::before{content:"\201C";display:block;font-size:3.4rem;line-height:.6;color:#f28c1a}
+.wgo{background:#f28c1a;color:#2a1600;border:0;border-radius:99px;padding:15px 34px;font-size:1.1rem;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.wgo:hover{background:#ffa53d}
+.wmore{background:none;border:0;color:#fff;opacity:.8;text-decoration:underline;font-size:.9rem}
 li.odone{border-left-color:var(--ok);opacity:.7}li.ocancel{border-left-color:var(--mute);opacity:.5}
 .brand{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#0f4a2f,#1f7a4d);color:#fff;border-radius:16px;padding:16px 18px 13px;border-bottom:5px solid #f28c1a;margin-bottom:18px}
 .brand>div{position:relative}
@@ -83,6 +94,15 @@ footer svg{width:16px;height:16px}
 </style>
 </head>
 <body>
+<div id="welcome" role="dialog" aria-modal="true" aria-label="Lời động viên">
+  <svg class="deco" style="right:-40px;top:-50px;width:220px;height:220px" aria-hidden="true"><use href="#fl"/></svg>
+  <svg class="deco" style="left:-50px;bottom:-50px;width:240px;height:240px" aria-hidden="true"><use href="#fl"/></svg>
+  <svg class="wlogo" role="img" aria-label="Logo Dalat Hasfarm"><use href="#fl"/></svg>
+  <div class="wg" id="wg"></div>
+  <p class="wq" id="wq"></p>
+  <button class="wgo" id="wgo" type="button">Bắt đầu ngày mới</button>
+  <button class="wmore" id="wmore" type="button">Xem câu khác</button>
+</div>
 <main>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="fl" viewBox="0 0 64 64"><g style="fill:var(--p,#f28c1a)"><ellipse cx="32" cy="16" rx="7" ry="11"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="6" fill="#f5b700"/></symbol></svg>
 <div class="brand">
@@ -356,6 +376,64 @@ document.querySelector('.nav').addEventListener('click',function(e){if(e.target.
 $('date').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 load();setDefaultDue();updNotif();check();cload();oload();fillDL();addLine();oDefaults();orender();crender();
 setInterval(function(){check();if(!$('v-order').hidden)orender()},20000);
+</script>
+<script>
+(function(){
+var Q=['Bạn đã vượt qua bao nhiêu chuyện tệ rồi, thì chuyện hôm nay cũng sẽ trôi qua thôi. Đừng bỏ cuộc nhé.',
+'Đi chậm cũng được, miễn là bạn không dừng lại.',
+'Mỗi buổi sáng là một trang giấy trắng, hôm nay bạn muốn viết điều gì?',
+'Việc khó nhất là bắt đầu. Bạn đã ở đây rồi, vậy là đã đi được một nửa.',
+'Không ai giỏi ngay từ đầu. Người giỏi chỉ là người kiên trì lâu hơn.',
+'Hôm nay chỉ cần tốt hơn hôm qua một chút, vậy là đủ.',
+'Có những ngày mệt mỏi, nhưng bạn vẫn đứng dậy được, và điều đó đã rất đáng nể.',
+'Hoa nào cũng cần thời gian để nở. Bạn cũng vậy, đừng vội.',
+'Khó khăn hôm nay là nền móng cho thành công ngày mai.',
+'Đừng so sánh chương một của bạn với chương mười của người khác.',
+'Mỗi đơn hàng hoàn thành hôm nay là một bước gần hơn tới mục tiêu của bạn.',
+'Bạn không cần hoàn hảo, bạn chỉ cần tiến lên.',
+'Sai lầm không làm bạn thất bại. Chỉ việc bỏ cuộc mới làm điều đó.',
+'Sau cơn mưa trời lại sáng, sau ngày dài mệt mỏi sẽ là một giấc ngủ ngon.',
+'Hãy tử tế với chính mình, bạn đang cố gắng hết sức rồi.',
+'Một việc nhỏ làm xong mỗi ngày, cộng lại sẽ thành điều lớn lao.',
+'Điều bạn làm hôm nay chính là món quà cho bạn của ngày mai.',
+'Khi mệt, hãy nghỉ một chút, nhưng đừng bỏ cuộc.',
+'Bạn mạnh mẽ hơn bạn nghĩ, và bạn đã chứng minh điều đó nhiều lần rồi.',
+'Giọt nước nhỏ cũng làm mòn được đá, chỉ cần đủ kiên trì.',
+'Đừng đợi có đủ động lực mới làm. Cứ bắt đầu, động lực sẽ tự đến.',
+'Hôm nay có thể chưa như ý, nhưng ngày mai vẫn còn đó.',
+'Tin vào bản thân, bạn đã đi được rất xa rồi.',
+'Không có con đường nào bằng phẳng, nhưng đích đến luôn xứng đáng.',
+'Mỗi khách hàng hài lòng là thành quả của sự chăm chỉ của bạn.',
+'Cứ từ từ mà làm, việc lớn nào cũng bắt đầu từ việc nhỏ.',
+'Sự nỗ lực thầm lặng hôm nay sẽ tỏa sáng vào một ngày không xa.',
+'Nếu hôm qua bạn ngã, hôm nay hãy đứng lên, đơn giản vậy thôi.',
+'Chuyện gì rồi cũng qua, quan trọng là bạn vẫn còn đây và vẫn đang cố gắng.',
+'Hạt giống gieo hôm nay sẽ thành vườn hoa của ngày mai.',
+'Hãy làm việc bằng cả trái tim, kết quả sẽ không phụ bạn.',
+'Hít một hơi thật sâu, mỉm cười, và bắt đầu thôi.',
+'Đừng sợ chậm, chỉ sợ bạn không bắt đầu.',
+'Mỗi ngày là một cơ hội mới để làm tốt hơn.',
+'Bạn xứng đáng với những điều tốt đẹp, hãy tiếp tục cố gắng.',
+'Việc hôm nay đừng để ngày mai, nhưng đừng quên nghỉ ngơi khi cần.',
+'Người thành công không phải người không vấp ngã, mà là người luôn đứng dậy.',
+'Niềm vui nằm ở hành trình, hãy tận hưởng từng bước bạn đi.',
+'Áp lực rồi cũng qua, còn sự trưởng thành thì ở lại mãi.',
+'Chỉ cần bạn không dừng lại, sớm muộn gì cũng tới nơi.',
+'Hôm nay hãy làm một việc mà bạn của tương lai sẽ cảm ơn.',
+'Cố gắng thêm một chút nữa thôi, bạn sắp làm được rồi.',
+'Một ngày tốt lành bắt đầu bằng một suy nghĩ tích cực.',
+'Bạn không đơn độc, ai cũng có lúc thấy mệt và vẫn tiếp tục bước.'];
+var LK='nhacviec.lastquote',w=document.getElementById('welcome'),q=document.getElementById('wq');
+function last(){try{return parseInt(localStorage.getItem(LK),10)}catch(e){return -1}}
+function show(){var l=last(),i;do{i=Math.floor(Math.random()*Q.length)}while(i===l&&Q.length>1);
+  try{localStorage.setItem(LK,String(i))}catch(e){}q.textContent=Q[i]}
+var h=new Date().getHours();
+document.getElementById('wg').textContent=(h<11?'Chào buổi sáng':h<14?'Chào buổi trưa':h<18?'Chào buổi chiều':'Chào buổi tối')+', '+new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
+show();document.body.style.overflow='hidden';
+document.getElementById('wmore').addEventListener('click',show);
+document.getElementById('wgo').addEventListener('click',function(){w.classList.add('out');document.body.style.overflow='';setTimeout(function(){w.remove()},450)});
+try{document.getElementById('wgo').focus({preventScroll:true})}catch(e){}
+})();
 </script>
 </body>
 </html>
