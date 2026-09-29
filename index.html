@@ -55,6 +55,15 @@ li.late .due{color:var(--late);font-weight:700}li.soon .due{color:var(--soon);fo
 .otab{background:none;border:1px solid var(--line);border-radius:99px;padding:6px 14px;color:var(--mute);white-space:nowrap}
 .otab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.acwrap{position:relative}
+.acdrop{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);z-index:6;max-height:240px;overflow-y:auto;display:none}
+.acdrop.show{display:block}
+.acitem{padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--line)}
+.acitem:last-child{border-bottom:0}
+.acitem:hover,.acitem.hi{background:var(--bg)}
+.acn{font-weight:700}
+.acc{color:var(--mute);font-size:.82rem;margin-left:6px}
+.acempty{padding:9px 12px;color:var(--mute);font-size:.85rem}
 @media(max-width:480px){.g2{grid-template-columns:1fr}}
 .line{display:grid;grid-template-columns:1fr 76px 92px auto;gap:6px;align-items:center;margin-bottom:6px}
 #osearch{width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px;margin-bottom:12px}
@@ -213,8 +222,8 @@ footer svg{width:16px;height:16px}
 <section id="v-order" hidden>
 <form id="of">
   <div class="g2">
-    <div><label for="ocn">Tên khách hàng</label><input id="ocn" list="dl-name" required autocomplete="off"></div>
-    <div><label for="occ">Mã khách hàng</label><input id="occ" list="dl-code" autocomplete="off"></div>
+    <div class="acwrap"><label for="ocn">Tên khách hàng</label><input id="ocn" required autocomplete="off"><div class="acdrop" id="ocn-ac"></div></div>
+    <div class="acwrap"><label for="occ">Mã khách hàng</label><input id="occ" autocomplete="off"><div class="acdrop" id="occ-ac"></div></div>
   </div>
   <div class="g2">
     <div><label for="od">Ngày giao hàng</label><input id="od" type="date" required></div>
@@ -234,7 +243,6 @@ footer svg{width:16px;height:16px}
   <button class="otab" data-o="all" aria-pressed="false">Tất cả</button>
 </div>
 <ul id="olist"></ul>
-<datalist id="dl-name"></datalist><datalist id="dl-code"></datalist>
 <datalist id="dl-unit"><option value="Cành"><option value="Bó"><option value="Cái"></datalist>
 </section>
 <section id="v-set" hidden>
@@ -365,9 +373,38 @@ var OKEY='nhacviec.orders.v1',orders=[],ofilter='open',ST=['Mới','Đang chuẩ
 function oload(){try{orders=JSON.parse(localStorage.getItem(OKEY))||[]}catch(e){orders=[]}}
 function osave(){try{localStorage.setItem(OKEY,JSON.stringify(orders))}catch(e){}}
 function custs(){var m={};orders.forEach(function(o){if(o.cc)m[o.cc]=o.cn});CUSTOMERS.forEach(function(c){m[c.code]=c.name});customers.forEach(function(c){m[c.code]=c.name});return Object.keys(m).map(function(k){return{code:k,name:m[k]}})}
-function fillDL(){var c=custs();$('dl-name').innerHTML=c.map(function(x){return'<option value="'+esc(x.name)+'">'+esc(x.code)+'</option>'}).join('');$('dl-code').innerHTML=c.map(function(x){return'<option value="'+esc(x.code)+'">'+esc(x.name)+'</option>'}).join('')}
-$('ocn').addEventListener('input',function(){var v=this.value.trim().toLowerCase(),c=custs().find(function(x){return x.name.toLowerCase()===v});if(c){$('occ').value=c.code;useAddr(c.code)}});
-$('occ').addEventListener('input',function(){var v=this.value.trim().toLowerCase(),c=custs().find(function(x){return x.code.toLowerCase()===v});if(c){$('ocn').value=c.name;useAddr(c.code)}});
+function fillDL(){}
+function norm(s2){return String(s2||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').toLowerCase().trim()}
+function acPick(name,code){$('ocn').value=name;$('occ').value=code;useAddr(code);acHide('ocn');acHide('occ')}
+function acHide(id){var d=$(id+'-ac');d.classList.remove('show');d.innerHTML=''}
+function acShow(inputId,byCode){
+  var el=$(inputId),d=$(inputId+'-ac'),q=norm(el.value);
+  if(!q){acHide(inputId);return}
+  var list=custs().filter(function(c){return norm(c.name).indexOf(q)>-1||norm(c.code).indexOf(q)>-1}).slice(0,8);
+  if(!list.length){d.innerHTML='<div class="acempty">Không tìm thấy khách hàng phù hợp</div>';d.classList.add('show');return}
+  d.innerHTML=list.map(function(c,i){return'<div class="acitem" data-i="'+i+'" data-n="'+esc(c.name)+'" data-c="'+esc(c.code)+'"><span class="acn">'+esc(c.name)+'</span><span class="acc">'+esc(c.code)+'</span></div>'}).join('');
+  d.classList.add('show');
+  Array.prototype.forEach.call(d.querySelectorAll('.acitem'),function(row){row.addEventListener('mousedown',function(e){e.preventDefault();acPick(row.dataset.n,row.dataset.c)})});
+}
+['ocn','occ'].forEach(function(id){
+  $(id).addEventListener('input',function(){acShow(id)});
+  $(id).addEventListener('focus',function(){if(this.value.trim())acShow(id)});
+  $(id).addEventListener('keydown',function(e){
+    var d=$(id+'-ac');if(!d.classList.contains('show'))return;
+    var items=d.querySelectorAll('.acitem'),hi=d.querySelector('.acitem.hi'),idx=hi?[].indexOf.call(items,hi):-1;
+    if(e.key==='ArrowDown'){e.preventDefault();idx=Math.min(items.length-1,idx+1)}
+    else if(e.key==='ArrowUp'){e.preventDefault();idx=Math.max(0,idx-1)}
+    else if(e.key==='Enter'){if(hi){e.preventDefault();acPick(hi.dataset.n,hi.dataset.c)}return}
+    else if(e.key==='Escape'){acHide(id);return}
+    else return;
+    Array.prototype.forEach.call(items,function(x){x.classList.remove('hi')});
+    if(items[idx]){items[idx].classList.add('hi');items[idx].scrollIntoView({block:'nearest'})}
+  });
+});
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#ocn-ac')&&e.target.id!=='ocn')acHide('ocn');
+  if(!e.target.closest('#occ-ac')&&e.target.id!=='occ')acHide('occ');
+});
 function addLine(){var d=document.createElement('div');d.className='line';d.innerHTML='<input class="lp" placeholder="Mã hoặc tên sản phẩm" required aria-label="Sản phẩm"><input class="lq" type="number" min="0" step="any" placeholder="SL" required aria-label="Số lượng"><input class="lu" list="dl-unit" placeholder="Đơn vị" required aria-label="Đơn vị"><button type="button" class="del" aria-label="Xóa dòng">×</button>';$('lines').appendChild(d)}
 $('addline').addEventListener('click',addLine);
 $('lines').addEventListener('click',function(e){var b=e.target.closest('.del');if(b&&$('lines').children.length>1)b.parentNode.remove()});
