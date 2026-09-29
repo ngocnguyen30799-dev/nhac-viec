@@ -116,21 +116,21 @@ li.odone{border-left-color:var(--ok);opacity:.7}li.ocancel{border-left-color:var
 .d2{right:96px;bottom:-22px;width:64px;height:64px;opacity:.09}
 footer{display:flex;justify-content:center;align-items:center;gap:6px;color:var(--mute);font-size:.8rem;margin-top:28px}
 footer svg{width:16px;height:16px}
-#music{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:8;max-width:min(320px,calc(100vw - 24px))}
+#music{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:8;width:min(300px,calc(100vw - 24px))}
 #mbtn{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:9px 16px;box-shadow:0 4px 16px rgba(0,0,0,.15);color:var(--ink);font-weight:700}
 #mbtn .dot{width:8px;height:8px;border-radius:50%;background:var(--mute)}
 #mbtn.playing .dot{background:var(--ok);animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-#mpanel{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#mpanel{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 8px 24px rgba(0,0,0,.2);box-sizing:border-box;width:100%;overflow:hidden}
 #mpanel.open{display:grid;gap:8px}
 #mpanel input[type=text]{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px}
-.mrow{display:flex;gap:8px;align-items:center}
+.mrow{display:flex;gap:8px;align-items:center;min-width:0}
 .mrow .btn{padding:7px 12px;font-size:.85rem}
 #mtitle{font-size:.8rem;color:var(--mute);word-break:break-word}
 #mvol{flex:1}
 #merr{color:var(--late);font-size:.8rem;min-height:1.1em}
-.mprog{display:flex;align-items:center;gap:8px}
-.mprog input[type=range]{flex:1;accent-color:var(--ok)}
+.mprog{display:flex;align-items:center;gap:8px;min-width:0}
+.mprog input[type=range]{flex:1;min-width:0;width:0;accent-color:var(--ok)}
 .mtime{font-size:.72rem;color:var(--mute);white-space:nowrap;min-width:74px;text-align:right}
 #mvideoWrap{display:none;justify-content:center}
 #mvideoWrap.show{display:flex}
@@ -260,10 +260,10 @@ footer svg{width:16px;height:16px}
 <div id="music">
   <div id="mpanel">
     <label for="myt" style="font-size:.8rem;color:var(--mute)">Dán link YouTube</label>
-    <input id="myt" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+    <input id="myt" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" style="box-sizing:border-box">
     <div class="mrow"><button class="btn ok" id="mplay" type="button">Phát nhạc</button><button class="btn" id="mstop" type="button">Dừng</button><button class="btn" id="mreplay" type="button" hidden>Phát lại</button></div>
     <div class="mprog"><span class="mtime" id="mcur">0:00</span><input id="mseek" type="range" min="0" max="100" value="0" step="1" aria-label="Tua nhạc"><span class="mtime" id="mdur">0:00</span></div>
-    <div class="mrow"><span style="font-size:.8rem;color:var(--mute)">Âm lượng</span><input id="mvol" type="range" min="0" max="100" value="70"></div>
+    <div class="mrow" style="min-width:0"><span style="font-size:.8rem;color:var(--mute);white-space:nowrap">Âm lượng</span><input id="mvol" type="range" min="0" max="100" value="70" style="flex:1;min-width:0;width:0"></div>
     <div class="madtip" id="madtip">Có thể đang phát quảng cáo. Bấm "Hiện video" bên dưới để tìm nút Skip Ads của YouTube, bấm xong có thể ẩn lại.</div>
     <div class="mrow"><button class="btn" id="mshow" type="button">Hiện video</button></div>
     <div id="mvideoWrap"></div>
