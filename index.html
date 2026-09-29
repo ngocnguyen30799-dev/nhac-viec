@@ -116,6 +116,19 @@ li.odone{border-left-color:var(--ok);opacity:.7}li.ocancel{border-left-color:var
 .d2{right:96px;bottom:-22px;width:64px;height:64px;opacity:.09}
 footer{display:flex;justify-content:center;align-items:center;gap:6px;color:var(--mute);font-size:.8rem;margin-top:28px}
 footer svg{width:16px;height:16px}
+#music{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:8;max-width:min(320px,calc(100vw - 24px))}
+#mbtn{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:9px 16px;box-shadow:0 4px 16px rgba(0,0,0,.15);color:var(--ink);font-weight:700}
+#mbtn .dot{width:8px;height:8px;border-radius:50%;background:var(--mute)}
+#mbtn.playing .dot{background:var(--ok);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+#mpanel{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#mpanel.open{display:grid;gap:8px}
+#mpanel input[type=text]{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px}
+.mrow{display:flex;gap:8px;align-items:center}
+.mrow .btn{padding:7px 12px;font-size:.85rem}
+#mtitle{font-size:.8rem;color:var(--mute);word-break:break-word}
+#mvol{flex:1}
+#merr{color:var(--late);font-size:.8rem;min-height:1.1em}
 #toasts{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;max-width:calc(100% - 24px);z-index:9}
 .toast{background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 </style>
@@ -236,6 +249,18 @@ footer svg{width:16px;height:16px}
 </section>
 <footer><svg aria-hidden="true"><use href="#fl"/></svg>Công ty TNHH Dalat Hasfarm</footer>
 </main>
+<div id="music">
+  <div id="mpanel">
+    <label for="myt" style="font-size:.8rem;color:var(--mute)">Dán link YouTube</label>
+    <input id="myt" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+    <div class="mrow"><button class="btn ok" id="mplay" type="button">Phát nhạc</button><button class="btn" id="mstop" type="button">Dừng</button></div>
+    <div class="mrow"><span style="font-size:.8rem;color:var(--mute)">Âm lượng</span><input id="mvol" type="range" min="0" max="100" value="70"></div>
+    <div id="mtitle"></div>
+    <div id="merr" role="alert"></div>
+    <div style="font-size:.75rem;color:var(--mute)">Chỉ phát âm thanh, không hiện hình. Lần đầu trình duyệt có thể chặn tự phát, hãy bấm Phát nhạc.</div>
+  </div>
+  <button id="mbtn" type="button" aria-expanded="false"><span class="dot"></span><span id="mlabel">Nhạc nền</span></button>
+</div>
 <div id="toasts" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -429,6 +454,28 @@ async function exportXlsx(){
 $('oxl').addEventListener('click',exportXlsx);
 function setView(v){$('v-task').hidden=v!=='task';$('v-order').hidden=v!=='order';$('v-set').hidden=v!=='settings';document.querySelectorAll('.seg').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===v)});$('h1').textContent=v==='task'?'Việc hôm nay':v==='order'?'Đơn hàng':'Cài đặt khách hàng';if(v==='order')orender();if(v==='settings')crender()}
 document.querySelector('.nav').addEventListener('click',function(e){if(e.target.dataset.v)setView(e.target.dataset.v)});
+(function(){
+var box=$('music'),btn=$('mbtn'),panel=$('mpanel'),frame=null,playing=false;
+function ytId(u){u=(u||'').trim();var m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);return m?m[1]:null}
+function cmd(f,a){if(frame&&frame.contentWindow)try{frame.contentWindow.postMessage(JSON.stringify({event:'command',func:f,args:a||[]}),'*')}catch(e){}}
+function ensureFrame(id){
+  if(frame){cmd('loadVideoById',[id]);return}
+  frame=document.createElement('iframe');frame.id='myframe';frame.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;right:0';
+  frame.allow='autoplay; encrypted-media';
+  frame.src='https://www.youtube.com/embed/'+id+'?autoplay=1&enablejsapi=1&playsinline=1&controls=0&modestbranding=1&rel=0&origin='+encodeURIComponent(location.origin);
+  document.body.appendChild(frame);
+}
+function setPlaying(v){playing=v;btn.classList.toggle('playing',v);$('mlabel').textContent=v?'Đang phát nhạc':'Nhạc nền'}
+$('mplay').addEventListener('click',function(){
+  var id=ytId($('myt').value);$('merr').textContent='';
+  if(!id){$('merr').textContent='Link YouTube không hợp lệ, hãy kiểm tra lại';return}
+  ensureFrame(id);setTimeout(function(){cmd('setVolume',[Number($('mvol').value)]);cmd('playVideo')},400);
+  setPlaying(true);$('mtitle').textContent='Đang phát: '+$('myt').value.trim()});
+$('mstop').addEventListener('click',function(){cmd('pauseVideo');setPlaying(false)});
+$('mvol').addEventListener('input',function(){cmd('setVolume',[Number(this.value)])});
+btn.addEventListener('click',function(){var open=panel.classList.toggle('open');btn.setAttribute('aria-expanded',open)});
+document.addEventListener('click',function(e){if(!box.contains(e.target))panel.classList.remove('open')});
+})();
 $('date').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 load();setDefaultDue();updNotif();check();cload();oload();fillDL();addLine();oDefaults();orender();crender();
 setInterval(function(){check();if(!$('v-order').hidden)orender()},20000);
