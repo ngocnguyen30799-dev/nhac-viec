@@ -66,6 +66,9 @@ select{border:1px solid var(--line);background:var(--bg);border-radius:8px;paddi
 .orow .btn{white-space:nowrap;padding:8px 14px}
 #csearch{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px;flex:1;min-width:0}
 #clist{display:grid;gap:6px}
+#clist.collapsed{display:none}
+.crow2{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.crow2 .btn{white-space:nowrap;padding:6px 12px;font-size:.85rem}
 .crow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
 #welcome{position:fixed;inset:0;z-index:50;display:flex;text-align:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));background:linear-gradient(160deg,#0b3b25,#1f7a4d);color:#fff;overflow-y:auto;overflow-x:hidden;transition:opacity .4s,transform .4s}
 #welcome.out{opacity:0;transform:scale(1.03);pointer-events:none}
@@ -228,7 +231,7 @@ footer svg{width:16px;height:16px}
   <button class="btn ok" type="submit">Nhập danh sách dán</button>
 </form>
 <div class="orow"><input id="csearch" type="search" placeholder="Tìm khách hàng đã lưu…" aria-label="Tìm khách hàng"><button class="btn" id="cclear" type="button">Xóa tất cả</button></div>
-<div class="due" id="ccount" style="margin-bottom:8px"></div>
+<div class="crow2" style="margin-bottom:8px"><span class="due" id="ccount"></span><button class="btn" id="ctoggle" type="button" aria-expanded="true">Thu gọn</button></div>
 <div id="clist"></div>
 </section>
 <footer><svg aria-hidden="true"><use href="#fl"/></svg>Công ty TNHH Dalat Hasfarm</footer>
@@ -373,9 +376,13 @@ function importRows(rows){var add=0,upd=0,skip=0;
   csave();fillDL();crender();
   toast('Đã nhập '+add+' khách mới'+(upd?', cập nhật '+upd:'')+(skip?', bỏ qua '+skip+' dòng thiếu tên hoặc mã':''))}
 function parseText(t){return t.split(/\r?\n/).filter(function(l){return l.trim()}).map(function(l){return l.indexOf('\t')>-1?l.split('\t'):l.indexOf(';')>-1?l.split(';'):l.split(',')})}
+var clistCollapsed=false;
+function setCollapsed(v){clistCollapsed=v;$('clist').classList.toggle('collapsed',v);$('ctoggle').textContent=v?'Mở rộng':'Thu gọn';$('ctoggle').setAttribute('aria-expanded',String(!v))}
+$('ctoggle').addEventListener('click',function(){setCollapsed(!clistCollapsed)});
 function crender(){
   var q=$('csearch').value.trim().toLowerCase(),l=customers.filter(function(c){return !q||(c.name+' '+c.code).toLowerCase().indexOf(q)>-1});
   $('ccount').textContent='Đã lưu '+customers.length+' khách hàng'+(q?', tìm thấy '+l.length:'');
+  if(q&&clistCollapsed)setCollapsed(false);
   $('clist').innerHTML=l.slice(0,100).map(function(c){return'<div class="crow"><div><b>'+esc(c.name)+'</b><span class="code">'+esc(c.code)+'</span></div><button class="del" data-cdel="'+esc(c.code)+'" aria-label="Xóa khách hàng">×</button></div>'}).join('')
     +(l.length>100?'<div class="due">Đang hiện 100 khách đầu tiên, hãy dùng ô tìm kiếm để lọc.</div>':'')
     +(!l.length?'<div class="empty">'+(customers.length?'Không tìm thấy khách hàng nào.':'Chưa có khách hàng nào. Thêm từng khách hoặc nhập từ file ở phía trên.')+'</div>':'')}
