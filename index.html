@@ -129,6 +129,14 @@ footer svg{width:16px;height:16px}
 #mtitle{font-size:.8rem;color:var(--mute);word-break:break-word}
 #mvol{flex:1}
 #merr{color:var(--late);font-size:.8rem;min-height:1.1em}
+.mprog{display:flex;align-items:center;gap:8px}
+.mprog input[type=range]{flex:1;accent-color:var(--ok)}
+.mtime{font-size:.72rem;color:var(--mute);white-space:nowrap;min-width:74px;text-align:right}
+#mvideoWrap{display:none;justify-content:center}
+#mvideoWrap.show{display:flex}
+#mvideoWrap iframe{width:220px;height:124px;border:0;border-radius:8px}
+.madtip{display:none;background:rgba(242,140,26,.15);border:1px solid var(--orange,#f28c1a);color:var(--ink);font-size:.78rem;padding:6px 8px;border-radius:8px}
+.madtip.show{display:block}
 #toasts{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;max-width:calc(100% - 24px);z-index:9}
 .toast{background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 </style>
@@ -253,8 +261,12 @@ footer svg{width:16px;height:16px}
   <div id="mpanel">
     <label for="myt" style="font-size:.8rem;color:var(--mute)">Dán link YouTube</label>
     <input id="myt" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
-    <div class="mrow"><button class="btn ok" id="mplay" type="button">Phát nhạc</button><button class="btn" id="mstop" type="button">Dừng</button></div>
+    <div class="mrow"><button class="btn ok" id="mplay" type="button">Phát nhạc</button><button class="btn" id="mstop" type="button">Dừng</button><button class="btn" id="mreplay" type="button" hidden>Phát lại</button></div>
+    <div class="mprog"><span class="mtime" id="mcur">0:00</span><input id="mseek" type="range" min="0" max="100" value="0" step="1" aria-label="Tua nhạc"><span class="mtime" id="mdur">0:00</span></div>
     <div class="mrow"><span style="font-size:.8rem;color:var(--mute)">Âm lượng</span><input id="mvol" type="range" min="0" max="100" value="70"></div>
+    <div class="madtip" id="madtip">Có thể đang phát quảng cáo. Bấm "Hiện video" bên dưới để tìm nút Skip Ads của YouTube, bấm xong có thể ẩn lại.</div>
+    <div class="mrow"><button class="btn" id="mshow" type="button">Hiện video</button></div>
+    <div id="mvideoWrap"></div>
     <div id="mtitle"></div>
     <div id="merr" role="alert"></div>
     <div style="font-size:.75rem;color:var(--mute)">Chỉ phát âm thanh, không hiện hình. Lần đầu trình duyệt có thể chặn tự phát, hãy bấm Phát nhạc.</div>
@@ -455,24 +467,62 @@ $('oxl').addEventListener('click',exportXlsx);
 function setView(v){$('v-task').hidden=v!=='task';$('v-order').hidden=v!=='order';$('v-set').hidden=v!=='settings';document.querySelectorAll('.seg').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===v)});$('h1').textContent=v==='task'?'Việc hôm nay':v==='order'?'Đơn hàng':'Cài đặt khách hàng';if(v==='order')orender();if(v==='settings')crender()}
 document.querySelector('.nav').addEventListener('click',function(e){if(e.target.dataset.v)setView(e.target.dataset.v)});
 (function(){
-var box=$('music'),btn=$('mbtn'),panel=$('mpanel'),frame=null,playing=false;
+var box=$('music'),btn=$('mbtn'),panel=$('mpanel'),player=null,apiReady=false,pendingId=null,seeking=false,ticker=null;
 function ytId(u){u=(u||'').trim();var m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);return m?m[1]:null}
-function cmd(f,a){if(frame&&frame.contentWindow)try{frame.contentWindow.postMessage(JSON.stringify({event:'command',func:f,args:a||[]}),'*')}catch(e){}}
-function ensureFrame(id){
-  if(frame){cmd('loadVideoById',[id]);return}
-  frame=document.createElement('iframe');frame.id='myframe';frame.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;right:0';
-  frame.allow='autoplay; encrypted-media';
-  frame.src='https://www.youtube.com/embed/'+id+'?autoplay=1&enablejsapi=1&playsinline=1&controls=0&modestbranding=1&rel=0&origin='+encodeURIComponent(location.origin);
-  document.body.appendChild(frame);
+function fmt(t){t=Math.max(0,Math.floor(t||0));var m=Math.floor(t/60),s2=t%60;return m+':'+(s2<10?'0':'')+s2}
+function loadYT(){
+  return new Promise(function(res){
+    if(window.YT&&window.YT.Player)return res();
+    var prev=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){if(prev)try{prev()}catch(e){};res()};
+    if(!document.getElementById('ytapi-script')){var s2=document.createElement('script');s2.id='ytapi-script';s2.src='https://www.youtube.com/iframe_api';document.head.appendChild(s2)}
+  })
 }
-function setPlaying(v){playing=v;btn.classList.toggle('playing',v);$('mlabel').textContent=v?'Đang phát nhạc':'Nhạc nền'}
+function setPlaying(v){btn.classList.toggle('playing',v);$('mlabel').textContent=v?'Đang phát nhạc':'Nhạc nền'}
+function stopTicker(){if(ticker){clearInterval(ticker);ticker=null}}
+function startTicker(){stopTicker();ticker=setInterval(function(){
+  if(!player||!player.getCurrentTime||seeking)return;
+  var d=player.getDuration()||0,c=player.getCurrentTime()||0;
+  $('mdur').textContent=fmt(d);$('mcur').textContent=fmt(c);
+  $('mseek').max=Math.max(1,Math.floor(d));$('mseek').value=Math.floor(c);
+},500)}
+function onReady(){apiReady=true;$('merr').textContent='';cmdVolume();player.playVideo()}
+function cmdVolume(){if(player&&player.setVolume)player.setVolume(Number($('mvol').value))}
+function onState(e){
+  var YTS=window.YT.PlayerState;
+  if(e.data===YTS.PLAYING){setPlaying(true);startTicker();$('mreplay').hidden=true;$('madtip').classList.remove('show')}
+  else if(e.data===YTS.PAUSED){setPlaying(false)}
+  else if(e.data===YTS.ENDED){setPlaying(false);stopTicker();$('mreplay').hidden=false}
+  else if(e.data===YTS.BUFFERING||e.data===YTS.CUED||e.data===-1){
+    // Có thể đang tải quảng cáo trước khi vào bài chính
+    setTimeout(function(){if(player&&player.getPlayerState&&player.getPlayerState()!==YTS.PLAYING)$('madtip').classList.add('show')},2500)
+  }
+}
+function onErr(){$('merr').textContent='Video này không phát được (có thể bị chặn nhúng), hãy thử link khác'}
+function ensurePlayer(id){
+  $('merr').textContent='';
+  if(player){pendingId=id;player.loadVideoById(id);return}
+  loadYT().then(function(){
+    if(pendingId&&pendingId!==id)id=pendingId;
+    player=new YT.Player('ytmount',{height:'124',width:'220',videoId:id,
+      playerVars:{autoplay:1,playsinline:1,rel:0,modestbranding:1,origin:location.origin},
+      events:{onReady:onReady,onStateChange:onState,onError:onErr}});
+  })
+}
 $('mplay').addEventListener('click',function(){
   var id=ytId($('myt').value);$('merr').textContent='';
   if(!id){$('merr').textContent='Link YouTube không hợp lệ, hãy kiểm tra lại';return}
-  ensureFrame(id);setTimeout(function(){cmd('setVolume',[Number($('mvol').value)]);cmd('playVideo')},400);
-  setPlaying(true);$('mtitle').textContent='Đang phát: '+$('myt').value.trim()});
-$('mstop').addEventListener('click',function(){cmd('pauseVideo');setPlaying(false)});
-$('mvol').addEventListener('input',function(){cmd('setVolume',[Number(this.value)])});
+  $('mtitle').textContent='Đang phát: '+$('myt').value.trim();
+  ensurePlayer(id)});
+$('mstop').addEventListener('click',function(){if(player&&player.pauseVideo)player.pauseVideo();setPlaying(false)});
+$('mreplay').addEventListener('click',function(){if(player&&player.seekTo){player.seekTo(0,true);player.playVideo();$('mreplay').hidden=true}});
+$('mvol').addEventListener('input',cmdVolume);
+$('mseek').addEventListener('mousedown',function(){seeking=true});
+$('mseek').addEventListener('touchstart',function(){seeking=true});
+$('mseek').addEventListener('change',function(){if(player&&player.seekTo)player.seekTo(Number(this.value),true);$('mcur').textContent=fmt(this.value);seeking=false});
+$('mshow').addEventListener('click',function(){var w=$('mvideoWrap');var on=w.classList.toggle('show');$('mshow').textContent=on?'Ẩn video':'Hiện video';if(on&&!w.contains(document.getElementById('ytmount'))){var d=document.getElementById('ytmount');if(d)w.appendChild(d)}});
+box.insertBefore((function(){var d=document.createElement('div');d.id='ytmount';return d})(),null);
+document.getElementById('mvideoWrap').appendChild(document.getElementById('ytmount'));
 btn.addEventListener('click',function(){var open=panel.classList.toggle('open');btn.setAttribute('aria-expanded',open)});
 document.addEventListener('click',function(e){if(!box.contains(e.target))panel.classList.remove('open')});
 })();
