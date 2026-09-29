@@ -67,17 +67,41 @@ select{border:1px solid var(--line);background:var(--bg);border-radius:8px;paddi
 #csearch{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px;flex:1;min-width:0}
 #clist{display:grid;gap:6px}
 .crow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
-#welcome{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));background:linear-gradient(160deg,#0b3b25,#1f7a4d);color:#fff;overflow:hidden;transition:opacity .4s,transform .4s}
+#welcome{position:fixed;inset:0;z-index:50;display:flex;text-align:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));background:linear-gradient(160deg,#0b3b25,#1f7a4d);color:#fff;overflow-y:auto;overflow-x:hidden;transition:opacity .4s,transform .4s}
 #welcome.out{opacity:0;transform:scale(1.03);pointer-events:none}
 #welcome>:not(.deco){position:relative}
+#welcome>.wreg{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:16px;z-index:2}
+#welcome>.wmodal{position:fixed;z-index:5}
 #welcome :focus-visible{outline-color:#fff}
-.wlogo{width:76px;height:76px;flex:none;background:#fff;border-radius:50%;padding:6px}
-.wg{font-size:1rem;opacity:.9}
-.wq{margin:0;max-width:640px;font-size:clamp(1.3rem,4.6vw,2rem);font-weight:700;line-height:1.4;letter-spacing:-.01em;padding:0 8px}
-.wq::before{content:"\201C";display:block;font-size:3.4rem;line-height:.6;color:#f28c1a}
+.wc{margin:auto;width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:34px}
+.wreg{background:none;border:1.5px solid #fff;color:#fff;border-radius:99px;padding:8px 16px;font-weight:700;font-size:.9rem}
+.wreg:hover{background:rgba(255,255,255,.16)}
+.wlogo{width:64px;height:64px;flex:none;background:#fff;border-radius:50%;padding:5px}
+.wg{font-size:.95rem;opacity:.9}
+.wq{margin:0;font-size:clamp(1.15rem,4.2vw,1.6rem);font-weight:700;line-height:1.4;letter-spacing:-.01em;padding:0 6px}
+.wq::before{content:"\201C";display:block;font-size:3rem;line-height:.6;color:#f28c1a}
+#wlogin{background:none;border:0;padding:0;margin:0;width:100%;display:grid;gap:14px}
+.wcard{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:14px;display:grid;gap:10px;text-align:left}
+.wf{display:grid;gap:10px}
+#wlogin input[type=text],#wlogin input[type=password]{width:100%;border:0;border-radius:8px;padding:11px 12px;background:#fff;color:#16301f}
+#wlogin .chk{display:flex;align-items:center;gap:8px;font-size:.9rem;color:#fff;margin:0}
+#wlogin .chk input{width:auto;padding:0;border:0;accent-color:#f28c1a}
+#werr,#rerr{min-height:1.2em;font-size:.85rem;font-weight:700}
+#werr{color:#ffd9a0}
 .wgo{background:#f28c1a;color:#2a1600;border:0;border-radius:99px;padding:15px 34px;font-size:1.1rem;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.28)}
 .wgo:hover{background:#ffa53d}
-.wmore{background:none;border:0;color:#fff;opacity:.8;text-decoration:underline;font-size:.9rem}
+.wgo:disabled{opacity:.6;cursor:default}
+#wlogin .wgo{width:100%}
+.wmore{background:none;border:0;color:#fff;opacity:.85;text-decoration:underline;font-size:.9rem}
+.wmodal{background:rgba(5,25,15,.7);display:flex;padding:20px;inset:0}
+#wregform{background:#fff;color:#16301f;border:0;margin:auto;width:100%;max-width:380px;border-radius:16px;padding:20px;display:grid;gap:10px;text-align:left}
+#wregform h2{margin:0;font-size:1.2rem}
+#wregform label{color:#4a6353;font-size:.82rem;margin:0}
+#wregform input{background:#f1f6ef;color:#16301f;border:1px solid #d5e2d6}
+#rerr{color:#c0282b}
+.racts{display:flex;align-items:center;gap:12px}
+.racts .wgo{padding:11px 22px;font-size:1rem}
+.racts .wmore{color:#4a6353}
 li.odone{border-left-color:var(--ok);opacity:.7}li.ocancel{border-left-color:var(--mute);opacity:.5}
 .brand{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#0f4a2f,#1f7a4d);color:#fff;border-radius:16px;padding:16px 18px 13px;border-bottom:5px solid #f28c1a;margin-bottom:18px}
 .brand>div{position:relative}
@@ -94,16 +118,41 @@ footer svg{width:16px;height:16px}
 </style>
 </head>
 <body>
-<div id="welcome" role="dialog" aria-modal="true" aria-label="Lời động viên">
+<div id="welcome" role="dialog" aria-modal="true" aria-label="Lời động viên và đăng nhập">
   <svg class="deco" style="right:-40px;top:-50px;width:220px;height:220px" aria-hidden="true"><use href="#fl"/></svg>
   <svg class="deco" style="left:-50px;bottom:-50px;width:240px;height:240px" aria-hidden="true"><use href="#fl"/></svg>
-  <svg class="wlogo" role="img" aria-label="Logo Dalat Hasfarm"><use href="#fl"/></svg>
-  <div class="wg" id="wg"></div>
-  <p class="wq" id="wq"></p>
-  <button class="wgo" id="wgo" type="button">Bắt đầu ngày mới</button>
-  <button class="wmore" id="wmore" type="button">Xem câu khác</button>
+  <button class="wreg" id="wreg" type="button">Đăng ký tài khoản</button>
+  <div class="wc">
+    <svg class="wlogo" role="img" aria-label="Logo Dalat Hasfarm"><use href="#fl"/></svg>
+    <div class="wg" id="wg"></div>
+    <p class="wq" id="wq"></p>
+    <form id="wlogin" novalidate>
+      <div class="wcard">
+        <div class="wf" id="wfields">
+          <input id="wu" type="text" placeholder="Tên tài khoản" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20" aria-label="Tên tài khoản">
+          <input id="wp" type="password" placeholder="Mật khẩu (6 ký tự)" autocomplete="current-password" maxlength="6" aria-label="Mật khẩu">
+          <label class="chk"><input type="checkbox" id="wrem" checked> Ghi nhớ đăng nhập</label>
+        </div>
+        <div class="wf" id="wuser" hidden>
+          <div>Xin chào, <b id="wname"></b></div>
+          <button type="button" class="wmore" id="wout" style="justify-self:start;padding:0">Đăng xuất hoặc đổi tài khoản</button>
+        </div>
+        <div id="werr" role="alert"></div>
+      </div>
+      <button class="wgo" id="wgo" type="submit">Bắt đầu ngày mới</button>
+    </form>
+    <button class="wmore" id="wmore" type="button">Xem câu khác</button>
+  </div>
+  <div class="wmodal" id="wmodal" hidden>
+    <form id="wregform" novalidate>
+      <h2>Đăng ký tài khoản</h2>
+      <div><label for="ru">Tên tài khoản (3 đến 20 ký tự, chữ thường không dấu và số)</label><input id="ru" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20"></div>
+      <div><label for="rp">Mật khẩu (đúng 6 ký tự)</label><input id="rp" type="password" autocomplete="new-password" maxlength="6"></div>
+      <div id="rerr" role="alert"></div>
+      <div class="racts"><button type="submit" class="wgo" id="rgo">Tạo tài khoản</button><button type="button" class="wmore" id="rcancel">Hủy</button></div>
+    </form>
+  </div>
 </div>
-<main>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="fl" viewBox="0 0 64 64"><g style="fill:var(--p,#f28c1a)"><ellipse cx="32" cy="16" rx="7" ry="11"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="16" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="6" fill="#f5b700"/></symbol></svg>
 <div class="brand">
   <svg class="logo" role="img" aria-label="Logo Dalat Hasfarm"><use href="#fl"/></svg>
@@ -112,7 +161,7 @@ footer svg{width:16px;height:16px}
 </div>
 <header>
   <div><h1 id="h1">Việc hôm nay</h1><div class="date" id="date"></div></div>
-  <button class="ghost" id="notif" type="button">Bật thông báo</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="ghost" id="notif" type="button">Bật thông báo</button><button class="ghost" id="logout" type="button" hidden>Đăng xuất</button></div>
 </header>
 
 <nav class="nav"><button class="seg" data-v="task" aria-pressed="true">Công việc</button><button class="seg" data-v="order" aria-pressed="false">Đơn hàng</button><button class="seg" data-v="settings" aria-pressed="false">Cài đặt</button></nav>
@@ -379,60 +428,426 @@ setInterval(function(){check();if(!$('v-order').hidden)orender()},20000);
 </script>
 <script>
 (function(){
-var Q=['Bạn đã vượt qua bao nhiêu chuyện tệ rồi, thì chuyện hôm nay cũng sẽ trôi qua thôi. Đừng bỏ cuộc nhé.',
-'Đi chậm cũng được, miễn là bạn không dừng lại.',
-'Mỗi buổi sáng là một trang giấy trắng, hôm nay bạn muốn viết điều gì?',
-'Việc khó nhất là bắt đầu. Bạn đã ở đây rồi, vậy là đã đi được một nửa.',
-'Không ai giỏi ngay từ đầu. Người giỏi chỉ là người kiên trì lâu hơn.',
-'Hôm nay chỉ cần tốt hơn hôm qua một chút, vậy là đủ.',
-'Có những ngày mệt mỏi, nhưng bạn vẫn đứng dậy được, và điều đó đã rất đáng nể.',
-'Hoa nào cũng cần thời gian để nở. Bạn cũng vậy, đừng vội.',
-'Khó khăn hôm nay là nền móng cho thành công ngày mai.',
-'Đừng so sánh chương một của bạn với chương mười của người khác.',
-'Mỗi đơn hàng hoàn thành hôm nay là một bước gần hơn tới mục tiêu của bạn.',
-'Bạn không cần hoàn hảo, bạn chỉ cần tiến lên.',
-'Sai lầm không làm bạn thất bại. Chỉ việc bỏ cuộc mới làm điều đó.',
-'Sau cơn mưa trời lại sáng, sau ngày dài mệt mỏi sẽ là một giấc ngủ ngon.',
-'Hãy tử tế với chính mình, bạn đang cố gắng hết sức rồi.',
-'Một việc nhỏ làm xong mỗi ngày, cộng lại sẽ thành điều lớn lao.',
-'Điều bạn làm hôm nay chính là món quà cho bạn của ngày mai.',
-'Khi mệt, hãy nghỉ một chút, nhưng đừng bỏ cuộc.',
-'Bạn mạnh mẽ hơn bạn nghĩ, và bạn đã chứng minh điều đó nhiều lần rồi.',
-'Giọt nước nhỏ cũng làm mòn được đá, chỉ cần đủ kiên trì.',
-'Đừng đợi có đủ động lực mới làm. Cứ bắt đầu, động lực sẽ tự đến.',
-'Hôm nay có thể chưa như ý, nhưng ngày mai vẫn còn đó.',
-'Tin vào bản thân, bạn đã đi được rất xa rồi.',
-'Không có con đường nào bằng phẳng, nhưng đích đến luôn xứng đáng.',
-'Mỗi khách hàng hài lòng là thành quả của sự chăm chỉ của bạn.',
-'Cứ từ từ mà làm, việc lớn nào cũng bắt đầu từ việc nhỏ.',
-'Sự nỗ lực thầm lặng hôm nay sẽ tỏa sáng vào một ngày không xa.',
-'Nếu hôm qua bạn ngã, hôm nay hãy đứng lên, đơn giản vậy thôi.',
-'Chuyện gì rồi cũng qua, quan trọng là bạn vẫn còn đây và vẫn đang cố gắng.',
-'Hạt giống gieo hôm nay sẽ thành vườn hoa của ngày mai.',
-'Hãy làm việc bằng cả trái tim, kết quả sẽ không phụ bạn.',
-'Hít một hơi thật sâu, mỉm cười, và bắt đầu thôi.',
-'Đừng sợ chậm, chỉ sợ bạn không bắt đầu.',
-'Mỗi ngày là một cơ hội mới để làm tốt hơn.',
-'Bạn xứng đáng với những điều tốt đẹp, hãy tiếp tục cố gắng.',
-'Việc hôm nay đừng để ngày mai, nhưng đừng quên nghỉ ngơi khi cần.',
-'Người thành công không phải người không vấp ngã, mà là người luôn đứng dậy.',
-'Niềm vui nằm ở hành trình, hãy tận hưởng từng bước bạn đi.',
-'Áp lực rồi cũng qua, còn sự trưởng thành thì ở lại mãi.',
-'Chỉ cần bạn không dừng lại, sớm muộn gì cũng tới nơi.',
-'Hôm nay hãy làm một việc mà bạn của tương lai sẽ cảm ơn.',
-'Cố gắng thêm một chút nữa thôi, bạn sắp làm được rồi.',
-'Một ngày tốt lành bắt đầu bằng một suy nghĩ tích cực.',
-'Bạn không đơn độc, ai cũng có lúc thấy mệt và vẫn tiếp tục bước.'];
+var Q=[
+'Mọi thứ luôn có vẻ bất khả thi cho đến khi nó được hoàn thành.',
+'Thời kỳ gian khó không kéo dài mãi, nhưng những con người kiên cường thì có.',
+'Những vì sao không thể tỏa sáng nếu không có bóng tối.',
+'Hãy biến những vết thương của bạn thành sự khôn ngoan.',
+'Nỗi đau bạn cảm thấy hôm nay sẽ là sức mạnh bạn cảm nhận được ngày mai.',
+'Biển lặng chẳng bao giờ tạo nên những thủy thủ tài ba.',
+'Đáy vực thẳm đã trở thành nền tảng vững chắc để tôi xây dựng lại cuộc đời mình.',
+'Đừng để ngày hôm qua chiếm quá nhiều thời gian của ngày hôm nay.',
+'Mỗi cú đánh trượt đều mang tôi đến gần hơn với cú đánh ăn điểm.',
+'Nếu bạn đang đi qua địa ngục, hãy cứ tiếp tục bước đi.',
+'Bí quyết để tiến lên phía trước là bắt đầu.',
+'Hành trình vạn dặm bắt đầu từ một bước chân.',
+'Đừng chờ đợi cơ hội. Hãy tự tạo ra nó.',
+'Hãy làm những gì bạn có thể, với những gì bạn có, ở nơi bạn đang đứng.',
+'\'Một ngày nào đó\' không phải là một ngày trong tuần.',
+'Hành động là chìa khóa nền tảng cho mọi thành công.',
+'Những điều tuyệt vời không bao giờ đến từ vùng an toàn.',
+'Ngừng mơ mộng, hãy bắt đầu hành động.',
+'Thời điểm tốt nhất để trồng một cây là 20 năm trước. Thời điểm tốt thứ hai là ngay bây giờ.',
+'Bạn không cần phải tuyệt vời để bắt đầu, nhưng bạn phải bắt đầu để trở nên tuyệt vời.',
+'Ngã bảy lần, đứng dậy tám lần.',
+'Bạn đi chậm thế nào không quan trọng, miễn là bạn không dừng lại.',
+'Đừng bao giờ từ bỏ ước mơ chỉ vì thời gian cần thiết để đạt được nó.',
+'Thành công không phải là điểm dừng, thất bại không phải là dấu chấm hết: lòng can đảm bước tiếp mới là điều quan trọng.',
+'Người chiến thắng không bao giờ bỏ cuộc và người bỏ cuộc không bao giờ chiến thắng.',
+'Hãy tin rằng bạn có thể và bạn đã đi được nửa chặng đường.',
+'Hãy luôn hướng khuôn mặt về phía ánh mặt trời, và bóng tối sẽ ngả về phía sau bạn.',
+'Bạn hoàn toàn do chính bạn quyết định.',
+'Điều gì chiếm hữu tâm trí bạn sẽ kiểm soát cuộc đời bạn.',
+'Thái độ là một điều nhỏ bé nhưng tạo ra sự khác biệt lớn lao.',
+'Không ai có thể làm bạn cảm thấy thấp kém nếu không có sự cho phép của bạn.',
+'Hãy là chính mình; những người khác đã có người đóng rồi.',
+'Bạn đã đủ tốt với chính con người thật của mình.',
+'Sự nghi ngờ giết chết nhiều ước mơ hơn cả sự thất bại.',
+'Để trở thành người giỏi nhất, bạn phải có khả năng đối mặt với những điều tồi tệ nhất.',
+'Hạnh phúc đích thực dọn đường cho những cơ hội không tưởng.',
+'Ý chí mạnh mẽ là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Sự tập trung cao độ dọn đường cho một cuộc sống có mục đích.',
+'Sự kiên nhẫn vô tận mở ra cánh cửa dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Khát vọng lớn lao nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Ý chí mạnh mẽ mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Lòng can đảm mỗi ngày tạo ra sự vĩ đại đích thực và bền vững.',
+'Khát vọng lớn lao tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Một tư duy tích cực tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Sự kiên nhẫn vô tận dọn đường cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự nỗ lực không ngừng mở ra cánh cửa dẫn đến những cơ hội không tưởng.',
+'Lòng can đảm mỗi ngày luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Thành công là chìa khóa tối thượng cho một cuộc sống có mục đích.',
+'Kỷ luật thép mở ra cánh cửa dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Khả năng phục hồi từ bên trong liên tục tạo ra một cuộc sống có mục đích.',
+'Khả năng phục hồi từ bên trong nuôi dưỡng môi trường cho sự vĩ đại đích thực và bền vững.',
+'Khả năng phục hồi từ bên trong tự nhiên mang lại một cuộc sống có mục đích.',
+'Hành động mạnh mẽ nuôi dưỡng môi trường cho một cuộc sống có mục đích.',
+'Kỷ luật thép tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Sự nỗ lực không ngừng luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Lòng biết ơn chân thành luôn luôn truyền cảm hứng cho sự vĩ đại đích thực và bền vững.',
+'Kỷ luật thép luôn luôn truyền cảm hứng cho một cuộc sống có mục đích.',
+'Khả năng phục hồi từ bên trong dọn đường cho sự bình yên và sáng suốt từ bên trong.',
+'Khát vọng lớn lao tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Hành động mạnh mẽ nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép luôn luôn truyền cảm hứng cho những cơ hội không tưởng.',
+'Lòng biết ơn chân thành tạo ra sự vĩ đại đích thực và bền vững.',
+'Khả năng phục hồi từ bên trong là chìa khóa tối thượng cho một cuộc sống có mục đích.',
+'Trí tuệ sâu sắc liên tục tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành cuối cùng dẫn đến những cơ hội không tưởng.',
+'Sự kiên trì bền bỉ liên tục tạo ra những cơ hội không tưởng.',
+'Thành công nuôi dưỡng môi trường cho sự vĩ đại đích thực và bền vững.',
+'Ý chí mạnh mẽ cuối cùng dẫn đến sự vĩ đại đích thực và bền vững.',
+'Khả năng phục hồi từ bên trong luôn luôn truyền cảm hứng cho một cuộc sống có mục đích.',
+'Sự nỗ lực không ngừng mở ra cánh cửa dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép cuối cùng dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Sự kiên nhẫn vô tận tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Hành động mạnh mẽ liên tục tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Trí tuệ sâu sắc cuối cùng dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép liên tục tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Sự tự tin vững vàng luôn luôn truyền cảm hứng cho một cuộc sống có mục đích.',
+'Kỷ luật thép tự nhiên mang lại sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng nuôi dưỡng môi trường cho những cơ hội không tưởng.',
+'Thành công luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Hành động mạnh mẽ dọn đường cho một cuộc sống có mục đích.',
+'Một tư duy tích cực liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng cuối cùng dẫn đến một ngày mai tốt đẹp hơn nhiều.',
+'Khát vọng lớn lao tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Một tư duy tích cực cuối cùng dẫn đến sự vĩ đại đích thực và bền vững.',
+'Sự kiên nhẫn vô tận luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Hành động mạnh mẽ mở ra cánh cửa dẫn đến một ngày mai tốt đẹp hơn nhiều.',
+'Sự kiên nhẫn vô tận liên tục tạo ra những cơ hội không tưởng.',
+'Sự kiên trì bền bỉ mở ra cánh cửa dẫn đến sự vĩ đại đích thực và bền vững.',
+'Sự kiên trì bền bỉ luôn luôn truyền cảm hứng cho những cơ hội không tưởng.',
+'Lòng biết ơn chân thành dọn đường cho những cơ hội không tưởng.',
+'Khát vọng lớn lao nuôi dưỡng môi trường cho một cuộc sống có mục đích.',
+'Đam mê cháy bỏng liên tục tạo ra những cơ hội không tưởng.',
+'Sự kiên nhẫn vô tận nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Khả năng phục hồi từ bên trong liên tục tạo ra sự vĩ đại đích thực và bền vững.',
+'Lòng biết ơn chân thành tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Ý chí mạnh mẽ tự nhiên mang lại sự bình yên và sáng suốt từ bên trong.',
+'Sự kiên trì bền bỉ dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Việc học hỏi không ngừng liên tục tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Khát vọng lớn lao luôn luôn truyền cảm hứng cho một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Sự nỗ lực không ngừng tạo ra những cơ hội không tưởng.',
+'Hành động mạnh mẽ luôn luôn truyền cảm hứng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự tập trung cao độ luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Khát vọng lớn lao mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Thành công mở ra cánh cửa dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Sự tự tin vững vàng tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Khả năng phục hồi từ bên trong tạo ra sự vĩ đại đích thực và bền vững.',
+'Sự nỗ lực không ngừng là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Sự kiên trì bền bỉ là chìa khóa tối thượng cho sự bình yên và sáng suốt từ bên trong.',
+'Hành động mạnh mẽ nuôi dưỡng môi trường cho những cơ hội không tưởng.',
+'Sự tập trung cao độ cuối cùng dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Thành công liên tục tạo ra một cuộc sống có mục đích.',
+'Thành công luôn luôn truyền cảm hứng cho một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Hành động mạnh mẽ cuối cùng dẫn đến một cuộc sống có mục đích.',
+'Một tư duy tích cực tự nhiên mang lại những cơ hội không tưởng.',
+'Sự kiên trì bền bỉ nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Lòng can đảm mỗi ngày tự nhiên mang lại những cơ hội không tưởng.',
+'Lòng can đảm mỗi ngày dọn đường cho một ngày mai tốt đẹp hơn nhiều.',
+'Khả năng phục hồi từ bên trong tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Việc học hỏi không ngừng tạo ra sự vĩ đại đích thực và bền vững.',
+'Hạnh phúc đích thực nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Trí tuệ sâu sắc dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Đam mê cháy bỏng luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Sự tập trung cao độ là chìa khóa tối thượng cho một ngày mai tốt đẹp hơn nhiều.',
+'Hành động mạnh mẽ mở ra cánh cửa dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng mở ra cánh cửa dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Lòng biết ơn chân thành luôn luôn truyền cảm hứng cho những cơ hội không tưởng.',
+'Ý chí mạnh mẽ tự nhiên mang lại những cơ hội không tưởng.',
+'Thành công liên tục tạo ra sự vĩ đại đích thực và bền vững.',
+'Hành động mạnh mẽ tạo ra một cuộc sống có mục đích.',
+'Sự tập trung cao độ tạo ra những cơ hội không tưởng.',
+'Trí tuệ sâu sắc là chìa khóa tối thượng cho sự vĩ đại đích thực và bền vững.',
+'Sự kiên trì bền bỉ nuôi dưỡng môi trường cho sự vĩ đại đích thực và bền vững.',
+'Sự tập trung cao độ là chìa khóa tối thượng cho sự vĩ đại đích thực và bền vững.',
+'Kỷ luật thép liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng xây dựng nền tảng cho một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành dọn đường cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự kiên nhẫn vô tận dọn đường cho một cuộc sống có mục đích.',
+'Hành động mạnh mẽ là chìa khóa tối thượng cho sự vĩ đại đích thực và bền vững.',
+'Lòng can đảm mỗi ngày xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Sự kiên nhẫn vô tận liên tục tạo ra sự vĩ đại đích thực và bền vững.',
+'Sự nỗ lực không ngừng liên tục tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Kỷ luật thép tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Việc học hỏi không ngừng tạo ra những cơ hội không tưởng.',
+'Khát vọng lớn lao nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự tập trung cao độ mở ra cánh cửa dẫn đến sự vĩ đại đích thực và bền vững.',
+'Một tư duy tích cực nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Việc học hỏi không ngừng dọn đường cho sự bình yên và sáng suốt từ bên trong.',
+'Lòng biết ơn chân thành mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Lòng biết ơn chân thành xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Sự tập trung cao độ cuối cùng dẫn đến những cơ hội không tưởng.',
+'Khát vọng lớn lao nuôi dưỡng môi trường cho sự vĩ đại đích thực và bền vững.',
+'Đam mê cháy bỏng tự nhiên mang lại sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Sự kiên nhẫn vô tận tạo ra sự vĩ đại đích thực và bền vững.',
+'Sự kiên nhẫn vô tận xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Sự tự tin vững vàng xây dựng nền tảng cho một ngày mai tốt đẹp hơn nhiều.',
+'Hạnh phúc đích thực tạo ra một cuộc sống có mục đích.',
+'Trí tuệ sâu sắc cuối cùng dẫn đến những cơ hội không tưởng.',
+'Trí tuệ sâu sắc mở ra cánh cửa dẫn đến những cơ hội không tưởng.',
+'Ý chí mạnh mẽ nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Sự tự tin vững vàng là chìa khóa tối thượng cho sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép xây dựng nền tảng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự nỗ lực không ngừng tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Hành động mạnh mẽ tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Hạnh phúc đích thực nuôi dưỡng môi trường cho một cuộc sống có mục đích.',
+'Trí tuệ sâu sắc xây dựng nền tảng cho một cuộc sống có mục đích.',
+'Ý chí mạnh mẽ liên tục tạo ra những cơ hội không tưởng.',
+'Sự tập trung cao độ liên tục tạo ra sự vĩ đại đích thực và bền vững.',
+'Thành công là chìa khóa tối thượng cho sự vĩ đại đích thực và bền vững.',
+'Lòng can đảm mỗi ngày nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Khả năng phục hồi từ bên trong tạo ra một cuộc sống có mục đích.',
+'Hạnh phúc đích thực tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Ý chí mạnh mẽ tạo ra những cơ hội không tưởng.',
+'Đam mê cháy bỏng liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Lòng can đảm mỗi ngày mở ra cánh cửa dẫn đến những cơ hội không tưởng.',
+'Sự nỗ lực không ngừng dọn đường cho một cuộc sống có mục đích.',
+'Ý chí mạnh mẽ là chìa khóa tối thượng cho sự vĩ đại đích thực và bền vững.',
+'Đam mê cháy bỏng xây dựng nền tảng cho sự bình yên và sáng suốt từ bên trong.',
+'Một tư duy tích cực là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Lòng biết ơn chân thành tạo ra những cơ hội không tưởng.',
+'Trí tuệ sâu sắc tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Việc học hỏi không ngừng mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Lòng biết ơn chân thành cuối cùng dẫn đến một cuộc sống có mục đích.',
+'Sự kiên trì bền bỉ tạo ra những cơ hội không tưởng.',
+'Kỷ luật thép dọn đường cho một cuộc sống có mục đích.',
+'Sự tập trung cao độ mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Thành công là chìa khóa tối thượng cho sự bình yên và sáng suốt từ bên trong.',
+'Sự kiên nhẫn vô tận xây dựng nền tảng cho một cuộc sống có mục đích.',
+'Sự kiên trì bền bỉ tạo ra sự vĩ đại đích thực và bền vững.',
+'Hạnh phúc đích thực tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Khát vọng lớn lao là chìa khóa tối thượng cho sự bình yên và sáng suốt từ bên trong.',
+'Sự kiên trì bền bỉ tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Trí tuệ sâu sắc tạo ra một cuộc sống có mục đích.',
+'Khát vọng lớn lao là chìa khóa tối thượng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự kiên nhẫn vô tận luôn luôn truyền cảm hứng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự tập trung cao độ luôn luôn truyền cảm hứng cho sự vĩ đại đích thực và bền vững.',
+'Thành công tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Thành công cuối cùng dẫn đến những cơ hội không tưởng.',
+'Lòng biết ơn chân thành tự nhiên mang lại một cuộc sống có mục đích.',
+'Sự kiên nhẫn vô tận dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Một tư duy tích cực luôn luôn truyền cảm hứng cho một ngày mai tốt đẹp hơn nhiều.',
+'Thành công tự nhiên mang lại một cuộc sống có mục đích.',
+'Khả năng phục hồi từ bên trong liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Việc học hỏi không ngừng tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Khả năng phục hồi từ bên trong là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Khát vọng lớn lao mở ra cánh cửa dẫn đến những cơ hội không tưởng.',
+'Hạnh phúc đích thực tự nhiên mang lại sự bình yên và sáng suốt từ bên trong.',
+'Việc học hỏi không ngừng xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Lòng biết ơn chân thành là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Sự nỗ lực không ngừng liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Kỷ luật thép xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Sự kiên nhẫn vô tận cuối cùng dẫn đến những cơ hội không tưởng.',
+'Khả năng phục hồi từ bên trong xây dựng nền tảng cho một cuộc sống có mục đích.',
+'Sự kiên nhẫn vô tận liên tục tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Sự kiên nhẫn vô tận tạo ra một ngày mai tốt đẹp hơn nhiều.',
+'Trí tuệ sâu sắc tự nhiên mang lại một cuộc sống có mục đích.',
+'Khả năng phục hồi từ bên trong tạo ra những cơ hội không tưởng.',
+'Một tư duy tích cực tự nhiên mang lại một cuộc sống có mục đích.',
+'Lòng biết ơn chân thành dọn đường cho một cuộc sống có mục đích.',
+'Trí tuệ sâu sắc nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.',
+'Thành công liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng tự nhiên mang lại sự vĩ đại đích thực và bền vững.',
+'Việc học hỏi không ngừng nuôi dưỡng môi trường cho một cuộc sống có mục đích.',
+'Sự kiên nhẫn vô tận là chìa khóa tối thượng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự nỗ lực không ngừng luôn luôn truyền cảm hứng cho một cuộc sống có mục đích.',
+'Kỷ luật thép cuối cùng dẫn đến một ngày mai tốt đẹp hơn nhiều.',
+'Sự tự tin vững vàng dọn đường cho sự bình yên và sáng suốt từ bên trong.',
+'Sự kiên nhẫn vô tận nuôi dưỡng môi trường cho những cơ hội không tưởng.',
+'Việc học hỏi không ngừng xây dựng nền tảng cho những cơ hội không tưởng.',
+'Ý chí mạnh mẽ tự nhiên mang lại một cuộc sống có mục đích.',
+'Sự tập trung cao độ liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Ý chí mạnh mẽ dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Hành động mạnh mẽ tạo ra sự vĩ đại đích thực và bền vững.',
+'Sự kiên trì bền bỉ luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Thành công dọn đường cho những cơ hội không tưởng.',
+'Sự nỗ lực không ngừng nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành cuối cùng dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng cuối cùng dẫn đến những cơ hội không tưởng.',
+'Sự nỗ lực không ngừng mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Việc học hỏi không ngừng là chìa khóa tối thượng cho sự vĩ đại đích thực và bền vững.',
+'Một tư duy tích cực là chìa khóa tối thượng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự kiên trì bền bỉ là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Hành động mạnh mẽ xây dựng nền tảng cho những cơ hội không tưởng.',
+'Khả năng phục hồi từ bên trong xây dựng nền tảng cho sự bình yên và sáng suốt từ bên trong.',
+'Đam mê cháy bỏng mở ra cánh cửa dẫn đến những cơ hội không tưởng.',
+'Lòng biết ơn chân thành nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Kỷ luật thép luôn luôn truyền cảm hứng cho sự vĩ đại đích thực và bền vững.',
+'Một tư duy tích cực tạo ra sự vĩ đại đích thực và bền vững.',
+'Hạnh phúc đích thực xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Việc học hỏi không ngừng tự nhiên mang lại một ngày mai tốt đẹp hơn nhiều.',
+'Một tư duy tích cực tạo ra những cơ hội không tưởng.',
+'Lòng can đảm mỗi ngày tự nhiên mang lại sự bình yên và sáng suốt từ bên trong.',
+'Sự nỗ lực không ngừng nuôi dưỡng môi trường cho một cuộc sống có mục đích.',
+'Sự nỗ lực không ngừng dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Khả năng phục hồi từ bên trong là chìa khóa tối thượng cho một ngày mai tốt đẹp hơn nhiều.',
+'Lòng biết ơn chân thành liên tục tạo ra một cuộc sống có mục đích.',
+'Hành động mạnh mẽ luôn luôn truyền cảm hứng cho những cơ hội không tưởng.',
+'Ý chí mạnh mẽ luôn luôn truyền cảm hứng cho một ngày mai tốt đẹp hơn nhiều.',
+'Lòng can đảm mỗi ngày là chìa khóa tối thượng cho những cơ hội không tưởng.',
+'Sự nỗ lực không ngừng dọn đường cho những cơ hội không tưởng.',
+'Sự kiên nhẫn vô tận nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Hành động mạnh mẽ mở ra cánh cửa dẫn đến những cơ hội không tưởng.',
+'Việc học hỏi không ngừng tạo ra một cuộc sống có mục đích.',
+'Khả năng phục hồi từ bên trong cuối cùng dẫn đến một ngày mai tốt đẹp hơn nhiều.',
+'Kỷ luật thép liên tục tạo ra sự vĩ đại đích thực và bền vững.',
+'Sự tự tin vững vàng luôn luôn truyền cảm hứng cho những cơ hội không tưởng.',
+'Ý chí mạnh mẽ mở ra cánh cửa dẫn đến một ngày mai tốt đẹp hơn nhiều.',
+'Lòng can đảm mỗi ngày cuối cùng dẫn đến một cuộc sống có mục đích.',
+'Đam mê cháy bỏng dọn đường cho sự bình yên và sáng suốt từ bên trong.',
+'Thành công xây dựng nền tảng cho một ngày mai tốt đẹp hơn nhiều.',
+'Sự nỗ lực không ngừng là chìa khóa tối thượng cho một cuộc sống có mục đích.',
+'Sự tự tin vững vàng luôn luôn truyền cảm hứng cho sự bình yên và sáng suốt từ bên trong.',
+'Sự kiên nhẫn vô tận tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Sự kiên trì bền bỉ liên tục tạo ra sự vĩ đại đích thực và bền vững.',
+'Kỷ luật thép dọn đường cho những cơ hội không tưởng.',
+'Một tư duy tích cực nuôi dưỡng môi trường cho sự vĩ đại đích thực và bền vững.',
+'Sự kiên trì bền bỉ tự nhiên mang lại một cuộc sống có mục đích.',
+'Hành động mạnh mẽ nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Ý chí mạnh mẽ nuôi dưỡng môi trường cho một ngày mai tốt đẹp hơn nhiều.',
+'Khát vọng lớn lao liên tục tạo ra những cơ hội không tưởng.',
+'Sự tự tin vững vàng cuối cùng dẫn đến sự bình yên và sáng suốt từ bên trong.',
+'Sự tự tin vững vàng nuôi dưỡng môi trường cho một cuộc sống có mục đích.',
+'Hạnh phúc đích thực liên tục tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Ý chí mạnh mẽ tạo ra sự vĩ đại đích thực và bền vững.',
+'Đam mê cháy bỏng luôn luôn truyền cảm hứng cho một cuộc sống có mục đích.',
+'Thành công cuối cùng dẫn đến sự vĩ đại đích thực và bền vững.',
+'Sự tập trung cao độ xây dựng nền tảng cho sự vĩ đại đích thực và bền vững.',
+'Hạnh phúc đích thực là chìa khóa tối thượng cho một cuộc sống có mục đích.',
+'Một tư duy tích cực tạo ra sự bình yên và sáng suốt từ bên trong.',
+'Khả năng phục hồi từ bên trong mở ra cánh cửa dẫn đến một cuộc sống có mục đích.',
+'Trí tuệ sâu sắc dọn đường cho một ngày mai tốt đẹp hơn nhiều.',
+'Khát vọng lớn lao xây dựng nền tảng cho những cơ hội không tưởng.',
+'Thành công dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Lòng biết ơn chân thành dọn đường cho sự vĩ đại đích thực và bền vững.',
+'Một tư duy tích cực mở ra cánh cửa dẫn đến một ngày mai tốt đẹp hơn nhiều.',
+'Sự tự tin vững vàng nuôi dưỡng môi trường cho sự bình yên và sáng suốt từ bên trong.'
+];
+var FIREBASE_CONFIG={
+  apiKey: "AIzaSyBR199aD_kSc91lQMNoC5Y8DLAaKpurqHc",
+  authDomain: "thengoc-nhacviec.firebaseapp.com",
+  projectId: "thengoc-nhacviec",
+  storageBucket: "thengoc-nhacviec.firebasestorage.app",
+  messagingSenderId: "951213147817",
+  appId: "1:951213147817:web:a3b768dacf804c8cf48bb8"
+};
 var LK='nhacviec.lastquote',w=document.getElementById('welcome'),q=document.getElementById('wq');
 function last(){try{return parseInt(localStorage.getItem(LK),10)}catch(e){return -1}}
 function show(){var l=last(),i;do{i=Math.floor(Math.random()*Q.length)}while(i===l&&Q.length>1);
   try{localStorage.setItem(LK,String(i))}catch(e){}q.textContent=Q[i]}
 var h=new Date().getHours();
-document.getElementById('wg').textContent=(h<11?'Chào buổi sáng':h<14?'Chào buổi trưa':h<18?'Chào buổi chiều':'Chào buổi tối')+', '+new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
+$('wg').textContent=(h<11?'Chào buổi sáng':h<14?'Chào buổi trưa':h<18?'Chào buổi chiều':'Chào buổi tối')+', '+new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
 show();document.body.style.overflow='hidden';
-document.getElementById('wmore').addEventListener('click',show);
-document.getElementById('wgo').addEventListener('click',function(){w.classList.add('out');document.body.style.overflow='';setTimeout(function(){w.remove()},450)});
-try{document.getElementById('wgo').focus({preventScroll:true})}catch(e){}
+$('wmore').addEventListener('click',show);
+
+var DOMAIN='@nhacviec.app',auth=null,db=null,user=null,ready=false,syncOK=false,syncFailed=false;
+var timers={},pending={};
+function err(m){$('werr').textContent=m}
+function rerr(m){$('rerr').textContent=m}
+function normU(v){return v.trim().toLowerCase()}
+function validUser(u){return /^[a-z0-9]{3,20}$/.test(u)}
+function nameOf(u){return (u.email||'').split('@')[0]}
+function errMsg(e){var c=(e&&e.code)||'';
+  if(c==='auth/email-already-in-use')return 'Tên tài khoản này đã có người dùng, hãy chọn tên khác';
+  if(c==='auth/invalid-credential'||c==='auth/user-not-found'||c==='auth/wrong-password'||c==='auth/invalid-login-credentials')return 'Sai tên tài khoản hoặc mật khẩu';
+  if(c==='auth/network-request-failed')return 'Không có kết nối mạng, hãy thử lại';
+  if(c==='auth/too-many-requests')return 'Thử quá nhiều lần, hãy chờ một lúc rồi thử lại';
+  if(c==='auth/operation-not-allowed')return 'Chưa bật đăng nhập Email/Password trong Firebase';
+  return 'Có lỗi xảy ra, hãy thử lại'}
+function busy(on){$('wgo').disabled=on;$('wgo').textContent=on?'Đang xử lý…':'Bắt đầu ngày mới'}
+function showUser(){$('wfields').hidden=true;$('wuser').hidden=false;$('wname').textContent=nameOf(user)}
+function enter(){w.classList.add('out');document.body.style.overflow='';setTimeout(function(){w.remove()},450);if(user)$('logout').hidden=false}
+
+/* ---- đồng bộ dữ liệu theo tài khoản ---- */
+var _sv=save,_osv=osave,_csv=csave;
+function col(){return db.collection('users').doc(user.uid).collection('data')}
+function doPush(n){var g=pending[n];if(!g)return Promise.resolve();delete pending[n];
+  return col().doc(n).set({json:JSON.stringify(g()),updated:Date.now()}).catch(function(){syncFailed=true;toast('Không lưu được lên tài khoản, hãy kiểm tra mạng')})}
+function queue(n,g){pending[n]=g;clearTimeout(timers[n]);timers[n]=setTimeout(function(){doPush(n)},700)}
+function flushAll(){return Promise.all(Object.keys(pending).map(function(n){clearTimeout(timers[n]);return doPush(n)}))}
+save=function(){_sv();if(user&&syncOK)queue('tasks',function(){return tasks})};
+osave=function(){_osv();if(user&&syncOK)queue('orders',function(){return orders})};
+csave=function(){_csv();if(user&&syncOK)queue('customers',function(){return customers})};
+function mergeBy(a,b,key){var seen={},out=[];(b||[]).concat(a||[]).forEach(function(x){var k=key(x);if(!seen[k]){seen[k]=1;out.push(x)}});return out}
+function startSync(){
+  var owner=null;try{owner=localStorage.getItem('nhacviec.uid')}catch(e){}
+  var names=['tasks','orders','customers'];
+  return Promise.all(names.map(function(n){return col().doc(n).get()})).then(function(ds){
+    var r={},has=false;
+    names.forEach(function(n,i){if(ds[i].exists){has=true;try{r[n]=JSON.parse(ds[i].data().json)}catch(e){}}});
+    if(owner&&owner!==user.uid){tasks=[];orders=[];customers=[]}
+    var localHas=tasks.length||orders.length||customers.length;
+    if(has&&localHas){try{localStorage.setItem('nhacviec.backup',JSON.stringify({tasks:tasks,orders:orders,customers:customers,at:Date.now()}))}catch(e){}}
+    if(!owner){
+      tasks=mergeBy(tasks,r.tasks,function(x){return x.id});
+      orders=mergeBy(orders,r.orders,function(x){return x.id});
+      customers=mergeBy(customers,r.customers,function(x){return x.code.toLowerCase()});
+    }else{
+      if(r.tasks)tasks=r.tasks;if(r.orders)orders=r.orders;if(r.customers)customers=r.customers;
+    }
+    try{localStorage.setItem('nhacviec.uid',user.uid)}catch(e){}
+    _sv();_osv();_csv();
+    syncOK=true;
+    if(!has||!owner){queue('tasks',function(){return tasks});queue('orders',function(){return orders});queue('customers',function(){return customers})}
+    render();orender();fillDL();crender();
+  })
+}
+function finish(){busy(true);
+  return startSync().catch(function(){syncFailed=true;toast('Không đồng bộ được dữ liệu tài khoản, đang dùng dữ liệu trên máy này')}).then(function(){busy(false);enter()})}
+function logout(){
+  flushAll().then(function(){return auth.signOut()}).then(function(){
+    if(!syncFailed){['nhacviec.tasks.v1','nhacviec.orders.v1','nhacviec.customers.v1','nhacviec.uid'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}})}
+    location.reload()}).catch(function(){location.reload()})}
+$('logout').addEventListener('click',logout);
+$('wout').addEventListener('click',logout);
+
+/* ---- đăng nhập, đăng ký ---- */
+function loadScript(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+function initFirebase(){
+  var b='https://www.gstatic.com/firebasejs/10.12.2/';
+  return loadScript(b+'firebase-app-compat.js').then(function(){return Promise.all([loadScript(b+'firebase-auth-compat.js'),loadScript(b+'firebase-firestore-compat.js')])}).then(function(){
+    firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();
+    return new Promise(function(res){var un=auth.onAuthStateChanged(function(u){un();res(u)})})})}
+if(FIREBASE_CONFIG){
+  busy(true);$('wgo').textContent='Đang kết nối…';
+  initFirebase().then(function(u){ready=true;busy(false);if(u){user=u;showUser()}}).catch(function(){busy(false);err('Không kết nối được máy chủ tài khoản. Kiểm tra mạng rồi tải lại trang.')});
+}
+$('wlogin').addEventListener('submit',function(e){e.preventDefault();
+  if(!FIREBASE_CONFIG){enter();return}
+  if(!ready){err('Đang kết nối, vui lòng chờ một chút');return}
+  if(user){finish();return}
+  var u=normU($('wu').value),p=$('wp').value;
+  if(!u||!p){err('Hãy nhập tên tài khoản và mật khẩu');return}
+  if(!validUser(u)||p.length!==6){err('Sai tên tài khoản hoặc mật khẩu');return}
+  err('');busy(true);
+  auth.setPersistence($('wrem').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION)
+    .then(function(){return auth.signInWithEmailAndPassword(u+DOMAIN,p)})
+    .then(function(c){user=c.user;busy(false);return finish()})
+    .catch(function(x){busy(false);err(errMsg(x))})});
+$('wreg').addEventListener('click',function(){
+  if(!FIREBASE_CONFIG){err('Tính năng tài khoản đang chờ kết nối Firebase');return}
+  rerr('');$('wmodal').hidden=false;$('ru').focus()});
+$('rcancel').addEventListener('click',function(){$('wmodal').hidden=true});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')$('wmodal').hidden=true});
+$('wregform').addEventListener('submit',function(e){e.preventDefault();
+  if(!ready){rerr('Đang kết nối, vui lòng chờ một chút');return}
+  var u=normU($('ru').value),p=$('rp').value;
+  if(!validUser(u)){rerr('Tên tài khoản gồm 3 đến 20 ký tự, chỉ dùng chữ thường không dấu và số');return}
+  if(p.length!==6){rerr('Mật khẩu phải đúng 6 ký tự');return}
+  rerr('');$('rgo').disabled=true;
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function(){return auth.createUserWithEmailAndPassword(u+DOMAIN,p)})
+    .then(function(c){user=c.user;$('wmodal').hidden=true;$('ru').value='';$('rp').value='';showUser();err('Đăng ký thành công, bấm Bắt đầu ngày mới để vào')})
+    .catch(function(x){rerr(errMsg(x))})
+    .then(function(){$('rgo').disabled=false})});
+try{if(matchMedia('(pointer:fine)').matches)$('wu').focus({preventScroll:true})}catch(e){}
 })();
 </script>
 </body>
